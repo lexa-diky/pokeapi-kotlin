@@ -1,6 +1,6 @@
 package io.lexadiky.pokeapi.entity.type
 
-import io.lexadiky.pokeapi.entity.common.HasResourcePinter
+import io.lexadiky.pokeapi.entity.common.HasResourcePointer
 import io.lexadiky.pokeapi.entity.common.Name
 import io.lexadiky.pokeapi.entity.common.ResourcePointer
 import io.lexadiky.pokeapi.entity.generation.Generation
@@ -28,7 +28,7 @@ data class Type(
     data class PokemonSlot(
         @SerialName("pokemon") val pokemon: ResourcePointer<Pokemon>,
         @SerialName("slot") val slot: Int,
-    ) : HasResourcePinter<Pokemon> {
+    ) : HasResourcePointer<Pokemon> {
 
         override val pointer: ResourcePointer<Pokemon> = pokemon
     }
@@ -37,7 +37,7 @@ data class Type(
     data class GameIndexSlot(
         @SerialName("game_index") val gameIndex: Int,
         @SerialName("generation") val version: ResourcePointer<Generation>,
-    ) : HasResourcePinter<Generation> {
+    ) : HasResourcePointer<Generation> {
 
         override val pointer: ResourcePointer<Generation> = version
     }

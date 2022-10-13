@@ -1,7 +1,7 @@
 package io.lexadiky.pokeapi.entity.pokemon
 
 import io.lexadiky.pokeapi.entity.ability.Ability
-import io.lexadiky.pokeapi.entity.common.HasResourcePinter
+import io.lexadiky.pokeapi.entity.common.HasResourcePointer
 import io.lexadiky.pokeapi.entity.common.ResourcePointer
 import io.lexadiky.pokeapi.entity.generation.Generation
 import io.lexadiky.pokeapi.entity.item.Item
@@ -40,7 +40,7 @@ data class Pokemon(
     data class TypeSlot(
         @SerialName("slot") val slot: Int,
         @SerialName("type") val type: ResourcePointer<Type>,
-    ) : HasResourcePinter<Type> {
+    ) : HasResourcePointer<Type> {
 
         override val pointer: ResourcePointer<Type> = type
     }
@@ -56,7 +56,7 @@ data class Pokemon(
         @SerialName("ability") val ability: ResourcePointer<Ability>,
         @SerialName("slot") val slot: Int,
         @SerialName("is_hidden") val isHidden: Boolean,
-    ) : HasResourcePinter<Ability> {
+    ) : HasResourcePointer<Ability> {
 
         override val pointer: ResourcePointer<Ability> = ability
     }
@@ -65,7 +65,7 @@ data class Pokemon(
     data class GameIndexSlot(
         @SerialName("game_index") val gameIndex: Int,
         @SerialName("version") val version: ResourcePointer<Version>,
-    ) : HasResourcePinter<Version> {
+    ) : HasResourcePointer<Version> {
 
         override val pointer: ResourcePointer<Version> = version
     }
@@ -74,7 +74,7 @@ data class Pokemon(
     data class HeldItemSlot(
         @SerialName("item") val item: ResourcePointer<Item>,
         @SerialName("version_details") val versionDetails: List<VersionDetails>,
-    ) : HasResourcePinter<Item> {
+    ) : HasResourcePointer<Item> {
 
         override val pointer: ResourcePointer<Item> = item
 
@@ -82,7 +82,7 @@ data class Pokemon(
         data class VersionDetails(
             @SerialName("rarity") val rarity: Int,
             @SerialName("version") val version: ResourcePointer<Version>,
-        ) : HasResourcePinter<Version> {
+        ) : HasResourcePointer<Version> {
 
             override val pointer: ResourcePointer<Version> = version
         }
@@ -92,7 +92,7 @@ data class Pokemon(
     data class MoveSlot(
         @SerialName("move") val move: ResourcePointer<Move>,
         @SerialName("version_group_details") val versionGroupDetails: List<VersionGroupDetails>
-    ) : HasResourcePinter<Move> {
+    ) : HasResourcePointer<Move> {
 
         override val pointer: ResourcePointer<Move> = move
 
@@ -101,7 +101,7 @@ data class Pokemon(
             @SerialName("level_learned_at") val levelLearnedAt: Int,
             @SerialName("move_learn_method") val moveLearnMethod: ResourcePointer<MoveLearnMethod>,
             @SerialName("version_group") val versionGroup: ResourcePointer<VersionGroup>
-        ) : HasResourcePinter<MoveLearnMethod> {
+        ) : HasResourcePointer<MoveLearnMethod> {
 
             override val pointer: ResourcePointer<MoveLearnMethod> = moveLearnMethod
         }
@@ -112,7 +112,7 @@ data class Pokemon(
         @SerialName("base_stat") val baseStat: Int,
         @SerialName("effort") val effort: Int,
         @SerialName("stat") val stat: ResourcePointer<Stat>
-    ): HasResourcePinter<Stat> {
+    ): HasResourcePointer<Stat> {
 
         override val pointer: ResourcePointer<Stat> = stat
     }

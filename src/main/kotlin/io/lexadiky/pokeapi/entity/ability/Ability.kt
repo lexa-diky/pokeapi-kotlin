@@ -1,6 +1,6 @@
 package io.lexadiky.pokeapi.entity.ability
 
-import io.lexadiky.pokeapi.entity.common.HasResourcePinter
+import io.lexadiky.pokeapi.entity.common.HasResourcePointer
 import io.lexadiky.pokeapi.entity.common.Name
 import io.lexadiky.pokeapi.entity.common.ResourcePointer
 import io.lexadiky.pokeapi.entity.generation.Generation
@@ -28,7 +28,7 @@ data class Ability(
         @SerialName("pokemon") val pokemon: ResourcePointer<Pokemon>,
         @SerialName("slot") val slot: Int,
         @SerialName("is_hidden") val isHidden: Boolean,
-    ) : HasResourcePinter<Pokemon> {
+    ) : HasResourcePointer<Pokemon> {
 
         override val pointer: ResourcePointer<Pokemon> = pokemon
     }

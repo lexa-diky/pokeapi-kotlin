@@ -1,6 +1,6 @@
 package io.lexadiky.pokeapi.entity.common
 
-interface HasResourcePinter<T> {
+interface HasResourcePointer<T> {
 
     val pointer: ResourcePointer<T>
 }

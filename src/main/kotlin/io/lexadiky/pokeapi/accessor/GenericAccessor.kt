@@ -3,7 +3,7 @@ package io.lexadiky.pokeapi.accessor
 import io.ktor.client.call.*
 import io.ktor.util.reflect.*
 import io.lexadiky.pokeapi.impl.HttpRequester
-import io.lexadiky.pokeapi.entity.common.HasResourcePinter
+import io.lexadiky.pokeapi.entity.common.HasResourcePointer
 import io.lexadiky.pokeapi.entity.common.PagingPointer
 import io.lexadiky.pokeapi.entity.common.ResourceList
 import io.lexadiky.pokeapi.entity.common.ResourcePointer
@@ -23,7 +23,7 @@ interface GenericAccessor<Resource> {
 
     suspend fun get(pointer: ResourcePointer<Resource>): Result<Resource>
 
-    suspend fun get(pointer: HasResourcePinter<Resource>): Result<Resource>
+    suspend fun get(pointer: HasResourcePointer<Resource>): Result<Resource>
 
     fun pages(size: Int): Pages<Resource>
 
@@ -77,7 +77,7 @@ internal class GenericAccessorImpl<Resource>(
 
     override suspend fun get(pointer: ResourcePointer<Resource>) = get(name = pointer.name)
 
-    override suspend fun get(pointer: HasResourcePinter<Resource>): Result<Resource> = get(pointer.pointer)
+    override suspend fun get(pointer: HasResourcePointer<Resource>): Result<Resource> = get(pointer.pointer)
 
     override fun pages(size: Int): GenericAccessor.Pages<Resource> {
         return PagesImpl(size)
