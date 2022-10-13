@@ -3,6 +3,7 @@ package io.lexadiky.pokeapi.impl
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.cache.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*
@@ -10,8 +11,11 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.util.reflect.*
 import kotlinx.serialization.json.Json
 
-internal class HttpRequester(private val host: String, private val path: String) {
+internal class HttpRequester(private val host: String, private val path: String, private val useCache: Boolean) {
     private val httpClient = HttpClient(CIO) {
+        if (useCache) {
+            install(HttpCache)
+        }
         install(ContentNegotiation) {
             json(
                 Json {
