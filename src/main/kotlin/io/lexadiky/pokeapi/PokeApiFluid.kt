@@ -1,8 +1,7 @@
 package io.lexadiky.pokeapi
 
 import io.ktor.util.reflect.*
-import io.lexadiky.pokeapi.accessor.GenericAccessor
-import io.lexadiky.pokeapi.entity.common.ResouceList
+import io.lexadiky.pokeapi.entity.common.ResourceList
 import io.lexadiky.pokeapi.entity.common.ResourcePointer
 import io.lexadiky.pokeapi.impl.HttpRequester
 
@@ -30,6 +29,6 @@ suspend inline fun <reified T> ResourcePointer<T>.get(): T {
 }
 
 context(PokeApiFluidContext)
-fun <T> Result<ResouceList<T>>.get(): ResouceList<T> {
+fun <T> Result<ResourceList<T>>.get(): ResourceList<T> {
     return this.getOrThrow() // safe, because functions with PokeApiFluidContext as context are garanted to catch all exceptions
 }
