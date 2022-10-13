@@ -4,6 +4,7 @@ plugins {
     kotlin("jvm") version "1.7.20"
     kotlin("plugin.serialization") version "1.7.20"
     id("org.jetbrains.dokka") version "1.7.20"
+    id("io.gitlab.arturbosch.detekt") version "1.22.0-RC1"
 }
 
 group = "io.lexadiky"
@@ -32,4 +33,10 @@ tasks.withType<KotlinCompile> {
         jvmTarget = "1.8"
         freeCompilerArgs += "-Xcontext-receivers"
     }
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+    config = files("$projectDir/config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
 }

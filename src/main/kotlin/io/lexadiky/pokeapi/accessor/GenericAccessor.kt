@@ -1,7 +1,7 @@
 package io.lexadiky.pokeapi.accessor
 
-import io.ktor.client.call.*
-import io.ktor.util.reflect.*
+import io.ktor.util.reflect.TypeInfo
+import io.ktor.util.reflect.typeInfo
 import io.lexadiky.pokeapi.entity.common.HasResourcePointer
 import io.lexadiky.pokeapi.entity.common.PagingPointer
 import io.lexadiky.pokeapi.entity.common.ResourceList
@@ -124,7 +124,7 @@ internal class GenericAccessorImpl<Resource>(
     }
 
     @Suppress("RemoveExplicitTypeArguments")
-    inner class PagesImpl(private val size: Int): GenericAccessor.Pages<Resource> {
+    inner class PagesImpl(private val size: Int) : GenericAccessor.Pages<Resource> {
 
         override suspend fun first(): Result<ResourceList<Resource>> = runCatching {
             requester.get<ResourceList<Resource>>(resourceListType, resourceName, offset = 0, limit = size)

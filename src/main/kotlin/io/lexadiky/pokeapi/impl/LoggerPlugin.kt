@@ -1,8 +1,10 @@
 package io.lexadiky.pokeapi.impl
 
-import io.ktor.client.*
-import io.ktor.client.plugins.*
-import io.ktor.util.*
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.HttpClientPlugin
+import io.ktor.client.plugins.HttpSend
+import io.ktor.client.plugins.plugin
+import io.ktor.util.AttributeKey
 import io.lexadiky.pokeapi.PokeApiClientLogger
 
 /**
