@@ -2,6 +2,8 @@ package io.lexadiky.pokeapi
 
 import io.lexadiky.pokeapi.accessor.PokeApiAbilityResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiAbilityResourceAccessorImpl
+import io.lexadiky.pokeapi.accessor.PokeApiLanguageResourceAccessor
+import io.lexadiky.pokeapi.accessor.PokeApiLanguageResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.PokeApiPokemonResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiPokemonResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.PokeApiTypeResourceAccessor
@@ -22,6 +24,8 @@ interface PokeApiClient {
 
     val version: PokeApiVersionResourceAccessor
 
+    val language: PokeApiLanguageResourceAccessor
+
     suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T>
 }
 
@@ -31,12 +35,10 @@ internal class PokeApiClientImpl(host: String, path: String, useCache: Boolean) 
     private val fluidContext: PokeApiFluidContext = PokeApiFluidContextImpl(requester, this)
 
     override val pokemon: PokeApiPokemonResourceAccessor = PokeApiPokemonResourceAccessorImpl(requester)
-
     override val type: PokeApiTypeResourceAccessor = PokeApiTypeResourceAccessorImpl(requester)
-
     override val ability: PokeApiAbilityResourceAccessor = PokeApiAbilityResourceAccessorImpl(requester)
-
     override val version: PokeApiVersionResourceAccessor = PokeApiVersionResourceAccessorImpl(requester)
+    override val language: PokeApiLanguageResourceAccessor = PokeApiLanguageResourceAccessorImpl(requester)
 
     override suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T> {
         return runCatching { fluidContext.computation() }
