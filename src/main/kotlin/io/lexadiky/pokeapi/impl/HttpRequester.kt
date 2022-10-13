@@ -8,14 +8,22 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
+import io.ktor.util.logging.*
 import io.ktor.util.reflect.*
+import io.lexadiky.pokeapi.PokeApiClientLogger
 import kotlinx.serialization.json.Json
 
-internal class HttpRequester(private val host: String, private val path: String, private val useCache: Boolean) {
+internal class HttpRequester(
+    private val logger: PokeApiClientLogger,
+    private val host: String,
+    private val path: String,
+    private val useCache: Boolean,
+) {
     private val httpClient = HttpClient(CIO) {
         if (useCache) {
             install(HttpCache)
         }
+        install(LoggerPlugin(logger))
         install(ContentNegotiation) {
             json(
                 Json {

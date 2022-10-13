@@ -14,6 +14,8 @@ import io.lexadiky.pokeapi.accessor.PokeApiVersionResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiVersionResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.getAll
 import io.lexadiky.pokeapi.impl.HttpRequester
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
 
 interface PokeApiClient {
@@ -28,9 +30,9 @@ interface PokeApiClient {
     suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T>
 }
 
-internal class PokeApiClientImpl(host: String, path: String, useCache: Boolean) : PokeApiClient {
+internal class PokeApiClientImpl(logger: PokeApiClientLogger, host: String, path: String, useCache: Boolean, ) : PokeApiClient {
 
-    private val requester: HttpRequester = HttpRequester(host, path, useCache)
+    private val requester: HttpRequester = HttpRequester(logger, host, path, useCache)
     private val fluidContext: PokeApiFluidContext = PokeApiFluidContextImpl(requester, this)
 
     override val pokemon: PokeApiPokemonResourceAccessor = PokeApiPokemonResourceAccessorImpl(requester)
@@ -49,8 +51,10 @@ class PokeApiClientBuilder internal constructor() {
     var host: String = "pokeapi.co"
     var path: String = "api/v2"
     var useCache: Boolean = true
+    var logger: PokeApiClientLogger = NoOpPokeApiClientLogger()
 
     internal fun build(): PokeApiClient = PokeApiClientImpl(
+        logger = logger,
         host = host,
         path = path,
         useCache = useCache
