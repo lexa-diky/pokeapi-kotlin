@@ -1,4 +1,5 @@
 # PokeApi Kotlin
+[![.github/workflows/build.yml](https://github.com/lexa-diky/pokeapi-kotlin/actions/workflows/build.yml/badge.svg)](https://github.com/lexa-diky/pokeapi-kotlin/actions/workflows/build.yml)
 [![](https://jitpack.io/v/lexa-diky/pokeapi-kotlin.svg)](https://jitpack.io/#lexa-diky/pokeapi-kotlin)
 
 Kotlin client for https://pokeapi.co powered by coroutines.
