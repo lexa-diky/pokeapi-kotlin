@@ -4,6 +4,8 @@ import io.lexadiky.pokeapi.accessor.PokeApiAbilityResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiAbilityResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.PokeApiLanguageResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiLanguageResourceAccessorImpl
+import io.lexadiky.pokeapi.accessor.PokeApiPokemonColorResourceAccessor
+import io.lexadiky.pokeapi.accessor.PokeApiPokemonColorResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.PokeApiPokemonResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiPokemonResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.PokeApiTypeResourceAccessor
@@ -17,14 +19,11 @@ import kotlinx.coroutines.runBlocking
 interface PokeApiClient {
 
     val pokemon: PokeApiPokemonResourceAccessor
-
     val type: PokeApiTypeResourceAccessor
-
     val ability: PokeApiAbilityResourceAccessor
-
     val version: PokeApiVersionResourceAccessor
-
     val language: PokeApiLanguageResourceAccessor
+    val pokemonColor: PokeApiPokemonColorResourceAccessor
 
     suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T>
 }
@@ -39,6 +38,7 @@ internal class PokeApiClientImpl(host: String, path: String, useCache: Boolean) 
     override val ability: PokeApiAbilityResourceAccessor = PokeApiAbilityResourceAccessorImpl(requester)
     override val version: PokeApiVersionResourceAccessor = PokeApiVersionResourceAccessorImpl(requester)
     override val language: PokeApiLanguageResourceAccessor = PokeApiLanguageResourceAccessorImpl(requester)
+    override val pokemonColor: PokeApiPokemonColorResourceAccessor = PokeApiPokemonColorResourceAccessorImpl(requester)
 
     override suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T> {
         return runCatching { fluidContext.computation() }
