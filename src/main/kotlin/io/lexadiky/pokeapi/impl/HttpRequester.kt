@@ -43,6 +43,10 @@ internal class HttpRequester(private val host: String, private val path: String)
         }.body(type)
     }
 
+    suspend fun <T> get(type: TypeInfo, url: String): T {
+        return httpClient.get(url).body(type)
+    }
+
     companion object {
 
         private const val PARAM_OFFSET = "offset"

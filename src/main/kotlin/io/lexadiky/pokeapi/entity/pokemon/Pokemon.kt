@@ -3,6 +3,7 @@ package io.lexadiky.pokeapi.entity.pokemon
 import io.lexadiky.pokeapi.entity.ability.Ability
 import io.lexadiky.pokeapi.entity.common.HasResourcePinter
 import io.lexadiky.pokeapi.entity.common.ResourcePointer
+import io.lexadiky.pokeapi.entity.generation.Generation
 import io.lexadiky.pokeapi.entity.item.Item
 import io.lexadiky.pokeapi.entity.move.Move
 import io.lexadiky.pokeapi.entity.move.MoveLearnMethod
@@ -19,6 +20,7 @@ data class Pokemon(
     @SerialName("id") val id: Int,
     @SerialName("name") val name: String,
     @SerialName("types") val types: List<TypeSlot>,
+    @SerialName("past_types") val pastTypes: List<PastTypeSlot>,
     @SerialName("base_experience") val baseExperience: Int,
     @SerialName("height") val height: Int,
     @SerialName("is_default") val isDefault: Boolean,
@@ -42,6 +44,12 @@ data class Pokemon(
 
         override val pointer: ResourcePointer<Type> = type
     }
+
+    @Serializable
+    data class PastTypeSlot(
+        @SerialName("generation") val generation: ResourcePointer<Generation>,
+        @SerialName("types") val types: List<TypeSlot>,
+    )
 
     @Serializable
     data class AbilitySlot(

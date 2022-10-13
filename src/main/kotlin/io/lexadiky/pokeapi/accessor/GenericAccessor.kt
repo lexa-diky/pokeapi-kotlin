@@ -6,6 +6,9 @@ import io.lexadiky.pokeapi.impl.HttpRequester
 import io.lexadiky.pokeapi.entity.common.HasResourcePinter
 import io.lexadiky.pokeapi.entity.common.ResouceList
 import io.lexadiky.pokeapi.entity.common.ResourcePointer
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 
 interface GenericAccessor<Resource> {
 
@@ -20,6 +23,19 @@ interface GenericAccessor<Resource> {
     suspend fun get(pointer: ResourcePointer<Resource>): Result<Resource>
 
     suspend fun get(pointer: HasResourcePinter<Resource>): Result<Resource>
+}
+
+suspend fun <T> GenericAccessor<T>.getAll(): Flow<Result<T>> {
+    val allItems = all()
+    return if (allItems.isFailure) {
+        flowOf(Result.failure(allItems.exceptionOrNull()!!))
+    } else {
+        flow {
+            allItems.getOrThrow().forEach {
+                emit(get(it))
+            }
+        }
+    }
 }
 
 internal class GenericAccessorImpl<Resource>(
