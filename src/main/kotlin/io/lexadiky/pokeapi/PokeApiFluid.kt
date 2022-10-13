@@ -30,5 +30,5 @@ suspend inline fun <reified T> ResourcePointer<T>.get(): T {
 
 context(PokeApiFluidContext)
 fun <T> Result<ResourceList<T>>.get(): ResourceList<T> {
-    return this.getOrThrow() // safe, because functions with PokeApiFluidContext as context are garanted to catch all exceptions
+    return this.getOrThrow() // safe, because functions with PokeApiFluidContext as context are guaranteed to catch all exceptions
 }

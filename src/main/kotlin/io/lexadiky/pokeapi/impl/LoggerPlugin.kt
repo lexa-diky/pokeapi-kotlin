@@ -5,6 +5,9 @@ import io.ktor.client.plugins.*
 import io.ktor.util.*
 import io.lexadiky.pokeapi.PokeApiClientLogger
 
+/**
+ * Plugin performing logging into [PokeApiClientLogger]
+ */
 internal class LoggerPlugin(private val logger: PokeApiClientLogger) : HttpClientPlugin<LoggerPlugin, LoggerPlugin> {
 
     override val key: AttributeKey<LoggerPlugin> = AttributeKey(LOGGER_PLUGIN_KEY)

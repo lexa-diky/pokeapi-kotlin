@@ -12,6 +12,9 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
+/**
+ * Wraps pagination response
+ */
 @Serializable
 data class ResourceList<Resource>(
     @SerialName("count") val count: Int,
@@ -20,9 +23,15 @@ data class ResourceList<Resource>(
     @SerialName("results") val results: List<ResourcePointer<Resource>>
 ): List<ResourcePointer<Resource>> by results
 
+/**
+ * Pointer to another page. Keeps type safety when requesting next page
+ */
 @JvmInline
 value class PagingPointer<Resource>(val url: String)
 
+/**
+ * Serializer [String] <-> [PagingPointer]
+ */
 private class PagingPointerSerializer : KSerializer<PagingPointer<Any?>> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("paging_pointer", PrimitiveKind.STRING)
 

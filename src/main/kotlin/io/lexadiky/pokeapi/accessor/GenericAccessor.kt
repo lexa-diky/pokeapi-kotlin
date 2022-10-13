@@ -2,52 +2,92 @@ package io.lexadiky.pokeapi.accessor
 
 import io.ktor.client.call.*
 import io.ktor.util.reflect.*
-import io.lexadiky.pokeapi.impl.HttpRequester
 import io.lexadiky.pokeapi.entity.common.HasResourcePointer
 import io.lexadiky.pokeapi.entity.common.PagingPointer
 import io.lexadiky.pokeapi.entity.common.ResourceList
 import io.lexadiky.pokeapi.entity.common.ResourcePointer
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
+import io.lexadiky.pokeapi.impl.HttpRequester
 
+/**
+ * Generic way to access REST resource
+ */
 interface GenericAccessor<Resource> {
 
+    /**
+     * Lists all available resources
+     *
+     * @return list of all resources
+     */
     suspend fun all(): Result<ResourceList<Resource>>
 
+    /**
+     * Lists resources in [range]
+     *
+     * @param range range of resources to fetch
+     * @return list of resources in [range]
+     */
     suspend fun range(range: IntRange): Result<ResourceList<Resource>>
 
+    /**
+     * Gets resource details by [id]
+     *
+     * @param id of resource
+     * @return resource details
+     */
     suspend fun get(id: Int): Result<Resource>
 
+    /**
+     * Gets resource details by [name]
+     *
+     * @param name of resource
+     * @return resource details
+     */
     suspend fun get(name: String): Result<Resource>
 
+    /**
+     * Gets resource details by [ResourcePointer]. [ResourcePointer] could be retrieved by [all] or [range] methods. All taken from another resource.
+     *
+     * @param pointer to resource to retrieved
+     * @return resource details
+     */
     suspend fun get(pointer: ResourcePointer<Resource>): Result<Resource>
 
+    /**
+     * Gets resource details by [HasResourcePointer]. [HasResourcePointer] could be part of another resource
+     *
+     * @param pointer object containing explicit pointer to another resource
+     * @return resource details
+     */
     suspend fun get(pointer: HasResourcePointer<Resource>): Result<Resource>
 
+    /**
+     * Starts pagination with set [size] of page
+     *
+     * @param size of page
+     * @return pagination object
+     */
     fun pages(size: Int): Pages<Resource>
 
+    /**
+     * Pagination object with fixed page size
+     */
     interface Pages<Resource> {
 
+        /**
+         * @return first page
+         */
         suspend fun first(): Result<ResourceList<Resource>>
 
+        /**
+         * @return page by pointer to it, pointer could be found in previous [ResourceList]
+         */
         suspend fun get(pointer: PagingPointer<Resource>): Result<ResourceList<Resource>>
     }
 }
 
-suspend fun <T> GenericAccessor<T>.getAll(): Flow<Result<T>> {
-    val allItems = all()
-    return if (allItems.isFailure) {
-        flowOf(Result.failure(allItems.exceptionOrNull()!!))
-    } else {
-        flow {
-            allItems.getOrThrow().forEach {
-                emit(get(it))
-            }
-        }
-    }
-}
-
+/**
+ * Default implementation of [GenericAccessor]
+ */
 internal class GenericAccessorImpl<Resource>(
     private val resourceType: TypeInfo,
     private val resourceListType: TypeInfo,
@@ -97,10 +137,13 @@ internal class GenericAccessorImpl<Resource>(
 
     companion object {
         private const val ZERO_OFFSET = 0
-        private const val MAX_LIMIT = 500_000
+        private const val MAX_LIMIT = 500_000 // lets hope there is not more than 500_000 resources :)
     }
 }
 
+/**
+ * Helper for creating [GenericAccessorImpl]
+ */
 @Suppress("FunctionName")
 internal inline fun <reified T> GenericAccessorImpl(resource: String, requester: HttpRequester): GenericAccessorImpl<T> {
     return GenericAccessorImpl(

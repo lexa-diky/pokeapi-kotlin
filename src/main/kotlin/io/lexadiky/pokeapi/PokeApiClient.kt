@@ -14,18 +14,52 @@ import io.lexadiky.pokeapi.accessor.PokeApiVersionResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiVersionResourceAccessorImpl
 import io.lexadiky.pokeapi.impl.HttpRequester
 
+/**
+ * Entry point for PokeApi.
+ *
+ * Use either properties like [pokemon] to access normal REST style requests or [use] for Fluid API
+ */
 interface PokeApiClient {
 
+    /**
+     * [pokemon](https://pokeapi.co/docs/v2#pokemon) resource
+     */
     val pokemon: PokeApiPokemonResourceAccessor
+
+    /**
+     * [type](https://pokeapi.co/docs/v2#type) resource
+     */
     val type: PokeApiTypeResourceAccessor
+
+    /**
+     * [ability](https://pokeapi.co/docs/v2#ability) resource
+     */
     val ability: PokeApiAbilityResourceAccessor
+
+    /**
+     * [version](https://pokeapi.co/docs/v2#version) resource
+     */
     val version: PokeApiVersionResourceAccessor
+
+    /**
+     * [languages](https://pokeapi.co/docs/v2#languages) resource
+     */
     val language: PokeApiLanguageResourceAccessor
+
+    /**
+     * [pokemon-colors](https://pokeapi.co/docs/v2#pokemon-colors) resource
+     */
     val pokemonColor: PokeApiPokemonColorResourceAccessor
 
+    /**
+     * Entry point for Fluid API
+     */
     suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T>
 }
 
+/**
+ * Default [PokeApiClient] implementation using KTOR library
+ */
 internal class PokeApiClientImpl(logger: PokeApiClientLogger, host: String, path: String, useCache: Boolean) : PokeApiClient {
 
     private val requester: HttpRequester = HttpRequester(logger, host, path, useCache)
@@ -43,12 +77,33 @@ internal class PokeApiClientImpl(logger: PokeApiClientLogger, host: String, path
     }
 }
 
+/**
+ * Builder for [PokeApiClient]
+ */
 class PokeApiClientBuilder internal constructor() {
+    /**
+     * Host of PokeApi instance
+     */
     var host: String = "pokeapi.co"
+
+    /**
+     * Path to API endpoint
+     */
     var path: String = "api/v2"
+
+    /**
+     * If true API responses will be cached
+     */
     var useCache: Boolean = true
+
+    /**
+     * [PokeApiClientLogger] implementation to log http requests made by library. No logging by default
+     */
     var logger: PokeApiClientLogger = NoOpPokeApiClientLogger()
 
+    /**
+     * Builds [PokeApiClient]
+     */
     internal fun build(): PokeApiClient = PokeApiClientImpl(
         logger = logger,
         host = host,
@@ -57,7 +112,16 @@ class PokeApiClientBuilder internal constructor() {
     )
 }
 
-fun PokeApiClient(builder: PokeApiClientBuilder.() -> Unit): PokeApiClient {
+/**
+ * Primary library entry point. Creates [PokeApiClient] with settings in [builder]
+ *
+ * @param builder builder lambda, if not passed default settings will be used
+ * @return [PokeApiClient]
+ */
+fun PokeApiClient(builder: (PokeApiClientBuilder.() -> Unit)? = null): PokeApiClient {
+    if (builder == null) {
+        return PokeApiClientBuilder().build()
+    }
     return PokeApiClientBuilder().apply(builder)
         .build()
 }
