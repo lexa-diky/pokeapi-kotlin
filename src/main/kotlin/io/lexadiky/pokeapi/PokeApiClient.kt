@@ -12,11 +12,7 @@ import io.lexadiky.pokeapi.accessor.PokeApiTypeResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiTypeResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.PokeApiVersionResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiVersionResourceAccessorImpl
-import io.lexadiky.pokeapi.accessor.getAll
 import io.lexadiky.pokeapi.impl.HttpRequester
-import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.runBlocking
 
 interface PokeApiClient {
 
@@ -30,7 +26,7 @@ interface PokeApiClient {
     suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T>
 }
 
-internal class PokeApiClientImpl(logger: PokeApiClientLogger, host: String, path: String, useCache: Boolean, ) : PokeApiClient {
+internal class PokeApiClientImpl(logger: PokeApiClientLogger, host: String, path: String, useCache: Boolean) : PokeApiClient {
 
     private val requester: HttpRequester = HttpRequester(logger, host, path, useCache)
     private val fluidContext: PokeApiFluidContext = PokeApiFluidContextImpl(requester, this)

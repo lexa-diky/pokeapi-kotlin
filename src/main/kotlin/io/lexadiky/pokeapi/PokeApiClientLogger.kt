@@ -1,7 +1,5 @@
 package io.lexadiky.pokeapi
 
-import io.ktor.http.*
-
 interface PokeApiClientLogger {
 
     val isEnabled: Boolean get() = true

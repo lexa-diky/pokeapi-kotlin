@@ -7,7 +7,6 @@ import io.lexadiky.pokeapi.entity.generation.Generation
 import io.lexadiky.pokeapi.entity.move.Move
 import io.lexadiky.pokeapi.entity.move.MoveDamageClass
 import io.lexadiky.pokeapi.entity.pokemon.Pokemon
-import io.lexadiky.pokeapi.entity.version.Version
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
