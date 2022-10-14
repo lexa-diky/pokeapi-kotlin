@@ -5,6 +5,7 @@ plugins {
     kotlin("plugin.serialization") version "1.7.20"
     id("org.jetbrains.dokka") version "1.7.20"
     id("io.gitlab.arturbosch.detekt") version "1.22.0-RC1"
+    id("maven-publish")
 }
 
 group = "io.lexadiky"
