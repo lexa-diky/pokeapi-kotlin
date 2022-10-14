@@ -115,7 +115,9 @@ internal class GenericAccessorImpl<Resource>(
         requester.get(resourceType, resourceName, name)
     }
 
-    override suspend fun get(pointer: ResourcePointer<Resource>) = get(name = pointer.name)
+    override suspend fun get(pointer: ResourcePointer<Resource>): Result<Resource> = runCatching {
+        requester.get(resourceType, pointer.url)
+    }
 
     override suspend fun get(pointer: HasResourcePointer<Resource>): Result<Resource> = get(pointer.pointer)
 

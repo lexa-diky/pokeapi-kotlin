@@ -8,11 +8,14 @@ import io.lexadiky.pokeapi.accessor.PokeApiPokemonColorResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiPokemonColorResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.PokeApiPokemonResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiPokemonResourceAccessorImpl
+import io.lexadiky.pokeapi.accessor.PokeApiPokemonSpeciesResourceAccessor
+import io.lexadiky.pokeapi.accessor.PokeApiPokemonSpeciesResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.PokeApiTypeResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiTypeResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.PokeApiVersionResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiVersionResourceAccessorImpl
 import io.lexadiky.pokeapi.impl.HttpRequester
+import kotlinx.coroutines.runBlocking
 
 /**
  * Entry point for PokeApi.
@@ -52,6 +55,11 @@ interface PokeApiClient {
     val pokemonColor: PokeApiPokemonColorResourceAccessor
 
     /**
+     * [pokemon-species](https://pokeapi.co/docs/v2#pokemon-species) resource
+     */
+    val pokemonSpecies: PokeApiPokemonSpeciesResourceAccessor
+
+    /**
      * Entry point for Fluid API
      */
     suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T>
@@ -71,6 +79,7 @@ internal class PokeApiClientImpl(logger: PokeApiClientLogger, host: String, path
     override val version: PokeApiVersionResourceAccessor = PokeApiVersionResourceAccessorImpl(requester)
     override val language: PokeApiLanguageResourceAccessor = PokeApiLanguageResourceAccessorImpl(requester)
     override val pokemonColor: PokeApiPokemonColorResourceAccessor = PokeApiPokemonColorResourceAccessorImpl(requester)
+    override val pokemonSpecies: PokeApiPokemonSpeciesResourceAccessor = PokeApiPokemonSpeciesResourceAccessorImpl(requester)
 
     override suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T> {
         return runCatching { fluidContext.computation() }
@@ -126,4 +135,13 @@ fun PokeApiClient(builder: (PokeApiClientBuilder.() -> Unit)? = null): PokeApiCl
     }
     return PokeApiClientBuilder().apply(builder)
         .build()
+}
+
+fun main() {
+    runBlocking {
+        val client = PokeApiClient()
+        client.pokemonSpecies.all().getOrThrow().forEach {
+            println(client.pokemonSpecies.get(it).getOrThrow())
+        }
+    }
 }

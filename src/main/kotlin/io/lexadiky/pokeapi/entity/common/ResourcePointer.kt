@@ -8,6 +8,6 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class ResourcePointer<Resource>(
-    @SerialName("name") val name: String,
+    @SerialName("name") val name: String? = null,
     @SerialName("url") val url: String,
 )
