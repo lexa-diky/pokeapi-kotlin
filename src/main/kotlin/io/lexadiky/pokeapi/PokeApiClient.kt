@@ -2,6 +2,8 @@ package io.lexadiky.pokeapi
 
 import io.lexadiky.pokeapi.accessor.PokeApiAbilityResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiAbilityResourceAccessorImpl
+import io.lexadiky.pokeapi.accessor.PokeApiEggGroupResourceAccessor
+import io.lexadiky.pokeapi.accessor.PokeApiEggGroupResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.PokeApiLanguageResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiLanguageResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.PokeApiPokemonColorResourceAccessor
@@ -60,6 +62,11 @@ interface PokeApiClient {
     val pokemonSpecies: PokeApiPokemonSpeciesResourceAccessor
 
     /**
+     * [egg-group](https://pokeapi.co/docs/v2#egg-group) resource
+     */
+    val eggGroup: PokeApiEggGroupResourceAccessor
+
+    /**
      * Entry point for Fluid API
      */
     suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T>
@@ -80,6 +87,7 @@ internal class PokeApiClientImpl(logger: PokeApiClientLogger, host: String, path
     override val language: PokeApiLanguageResourceAccessor = PokeApiLanguageResourceAccessorImpl(requester)
     override val pokemonColor: PokeApiPokemonColorResourceAccessor = PokeApiPokemonColorResourceAccessorImpl(requester)
     override val pokemonSpecies: PokeApiPokemonSpeciesResourceAccessor = PokeApiPokemonSpeciesResourceAccessorImpl(requester)
+    override val eggGroup: PokeApiEggGroupResourceAccessor = PokeApiEggGroupResourceAccessorImpl(requester)
 
     override suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T> {
         return runCatching { fluidContext.computation() }
