@@ -3,6 +3,7 @@ package io.lexadiky.pokeapi
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
+@Suppress("UNUSED_VARIABLE")
 class PokeApiClientSample {
 
     @[Disabled Test]

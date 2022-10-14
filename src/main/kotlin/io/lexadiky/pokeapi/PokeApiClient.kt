@@ -136,12 +136,3 @@ fun PokeApiClient(builder: (PokeApiClientBuilder.() -> Unit)? = null): PokeApiCl
     return PokeApiClientBuilder().apply(builder)
         .build()
 }
-
-fun main() {
-    runBlocking {
-        val client = PokeApiClient()
-        client.pokemonSpecies.all().getOrThrow().forEach {
-            println(client.pokemonSpecies.get(it).getOrThrow())
-        }
-    }
-}
