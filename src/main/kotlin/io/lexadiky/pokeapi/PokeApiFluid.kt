@@ -6,8 +6,16 @@ import io.lexadiky.pokeapi.entity.common.ResourceList
 import io.lexadiky.pokeapi.entity.common.ResourcePointer
 import io.lexadiky.pokeapi.impl.HttpRequester
 
+/**
+ * Marker interface for Fluid API.
+ *
+ * Should not be overridden manually in any case.
+ */
 interface PokeApiFluidContext : PokeApiClient
 
+/**
+ * Implementation of [PokeApiFluidContext] with [PokeApiClient] under the hood.
+ */
 @PublishedApi
 internal class PokeApiFluidContextImpl(private val requester: HttpRequester, pokeApiClientImpl: PokeApiClientImpl) :
     PokeApiFluidContext,

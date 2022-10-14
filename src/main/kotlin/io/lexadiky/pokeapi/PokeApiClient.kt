@@ -117,6 +117,8 @@ class PokeApiClientBuilder internal constructor() {
  *
  * @param builder builder lambda, if not passed default settings will be used
  * @return [PokeApiClient]
+ *
+ * @sample io.lexadiky.pokeapi.PokeApiClientSample
  */
 fun PokeApiClient(builder: (PokeApiClientBuilder.() -> Unit)? = null): PokeApiClient {
     if (builder == null) {
