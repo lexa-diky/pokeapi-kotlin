@@ -11,7 +11,7 @@ import io.ktor.http.URLProtocol
 import io.ktor.http.path
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.util.reflect.TypeInfo
-import io.lexadiky.pokeapi.PokeApiClientLogger
+import io.lexadiky.pokeapi.util.PokeApiClientLogger
 import kotlinx.serialization.json.Json
 
 /**

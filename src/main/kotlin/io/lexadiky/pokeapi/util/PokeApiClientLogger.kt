@@ -1,4 +1,4 @@
-package io.lexadiky.pokeapi
+package io.lexadiky.pokeapi.util
 
 /**
  * Logger of library internal http requests
@@ -21,11 +21,3 @@ interface PokeApiClientLogger {
     fun onNetworkReceive(method: String, statusCode: Int, url: String)
 }
 
-/**
- * No operation implementation of [PokeApiClientLogger]
- */
-internal class NoOpPokeApiClientLogger : PokeApiClientLogger {
-    override val isEnabled: Boolean = false
-    override fun onNetworkSend(method: String, url: String) = Unit
-    override fun onNetworkReceive(method: String, statusCode: Int, url: String) = Unit
-}

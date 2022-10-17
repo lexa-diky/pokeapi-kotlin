@@ -10,16 +10,14 @@ import io.lexadiky.pokeapi.impl.HttpRequester
 /**
  * Generic way to access REST resource
  */
-interface GenericAccessor<Resource> {
-
-    val blocking: GenericBlockingAccessor<Resource>
+interface GenericBlockingAccessor<Resource> {
 
     /**
      * Lists all available resources
      *
      * @return list of all resources
      */
-    suspend fun all(): Result<ResourceList<Resource>>
+    fun all(): Result<ResourceList<Resource>>
 
     /**
      * Lists resources in [range]
@@ -27,7 +25,7 @@ interface GenericAccessor<Resource> {
      * @param range range of resources to fetch
      * @return list of resources in [range]
      */
-    suspend fun range(range: IntRange): Result<ResourceList<Resource>>
+    fun range(range: IntRange): Result<ResourceList<Resource>>
 
     /**
      * Gets resource details by [id]
@@ -35,7 +33,7 @@ interface GenericAccessor<Resource> {
      * @param id of resource
      * @return resource details
      */
-    suspend fun get(id: Int): Result<Resource>
+    fun get(id: Int): Result<Resource>
 
     /**
      * Gets resource details by [name]
@@ -43,7 +41,7 @@ interface GenericAccessor<Resource> {
      * @param name of resource
      * @return resource details
      */
-    suspend fun get(name: String): Result<Resource>
+    fun get(name: String): Result<Resource>
 
     /**
      * Gets resource details by [ResourcePointer]. [ResourcePointer] could be retrieved by [all] or [range] methods. All taken from another resource.
@@ -51,7 +49,7 @@ interface GenericAccessor<Resource> {
      * @param pointer to resource to retrieved
      * @return resource details
      */
-    suspend fun get(pointer: ResourcePointer<Resource>): Result<Resource>
+    fun get(pointer: ResourcePointer<Resource>): Result<Resource>
 
     /**
      * Gets resource details by [HasResourcePointer]. [HasResourcePointer] could be part of another resource
@@ -59,7 +57,7 @@ interface GenericAccessor<Resource> {
      * @param pointer object containing explicit pointer to another resource
      * @return resource details
      */
-    suspend fun get(pointer: HasResourcePointer<Resource>): Result<Resource>
+    fun get(pointer: HasResourcePointer<Resource>): Result<Resource>
 
     /**
      * Starts pagination with set [size] of page
@@ -77,11 +75,11 @@ interface GenericAccessor<Resource> {
         /**
          * @return first page
          */
-        suspend fun first(): Result<ResourceList<Resource>>
+        fun first(): Result<ResourceList<Resource>>
 
         /**
          * @return page by pointer to it, pointer could be found in previous [ResourceList]
          */
-        suspend fun get(pointer: PagingPointer<Resource>): Result<ResourceList<Resource>>
+        fun get(pointer: PagingPointer<Resource>): Result<ResourceList<Resource>>
     }
 }

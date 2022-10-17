@@ -2,6 +2,8 @@ package io.lexadiky.pokeapi
 
 import io.lexadiky.pokeapi.accessor.PokeApiAbilityResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiAbilityResourceAccessorImpl
+import io.lexadiky.pokeapi.accessor.PokeApiCharacteristicResourceAccessor
+import io.lexadiky.pokeapi.accessor.PokeApiCharacteristicResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.PokeApiEggGroupResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiEggGroupResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.PokeApiLanguageResourceAccessor
@@ -20,8 +22,9 @@ import io.lexadiky.pokeapi.accessor.PokeApiTypeResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiTypeResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.PokeApiVersionResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiVersionResourceAccessorImpl
-import io.lexadiky.pokeapi.entity.move.MoveDamageClass
 import io.lexadiky.pokeapi.impl.HttpRequester
+import io.lexadiky.pokeapi.impl.NoOpPokeApiClientLogger
+import io.lexadiky.pokeapi.util.PokeApiClientLogger
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -82,6 +85,11 @@ interface PokeApiClient {
     val moveDamageClass: PokeApiMoveDamageClassResourceAccessor
 
     /**
+     * [characteristics](https://pokeapi.co/docs/v2#characteristics) resource
+     */
+    val characteristic: PokeApiCharacteristicResourceAccessor
+
+    /**
      * Entry point for Fluid API
      */
     suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T>
@@ -90,9 +98,9 @@ interface PokeApiClient {
 /**
  * Default [PokeApiClient] implementation using KTOR library
  */
-internal class PokeApiClientImpl(logger: PokeApiClientLogger, host: String, path: String, useCache: Boolean) : PokeApiClient {
+internal class PokeApiClientImpl(private val builder: PokeApiClientBuilder) : PokeApiClient {
 
-    private val requester: HttpRequester = HttpRequester(logger, host, path, useCache)
+    private val requester: HttpRequester = HttpRequester(builder.logger, builder.host, builder.path, builder.useCache)
     private val fluidContext: PokeApiFluidContext = PokeApiFluidContextImpl(requester, this)
 
     override val pokemon: PokeApiPokemonResourceAccessor = PokeApiPokemonResourceAccessorImpl(requester)
@@ -105,6 +113,7 @@ internal class PokeApiClientImpl(logger: PokeApiClientLogger, host: String, path
     override val eggGroup: PokeApiEggGroupResourceAccessor = PokeApiEggGroupResourceAccessorImpl(requester)
     override val stat: PokeApiStatResourceAccessor = PokeApiStatResourceAccessorImpl(requester)
     override val moveDamageClass: PokeApiMoveDamageClassResourceAccessor = PokeApiMoveDamageClassResourceAccessorImpl(requester)
+    override val characteristic: PokeApiCharacteristicResourceAccessor = PokeApiCharacteristicResourceAccessorImpl(requester)
 
     override suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T> {
         return runCatching { fluidContext.computation() }
@@ -138,12 +147,7 @@ class PokeApiClientBuilder internal constructor() {
     /**
      * Builds [PokeApiClient]
      */
-    internal fun build(): PokeApiClient = PokeApiClientImpl(
-        logger = logger,
-        host = host,
-        path = path,
-        useCache = useCache
-    )
+    internal fun build(): PokeApiClient = PokeApiClientImpl(this)
 }
 
 /**
@@ -160,4 +164,11 @@ fun PokeApiClient(builder: (PokeApiClientBuilder.() -> Unit)? = null): PokeApiCl
     }
     return PokeApiClientBuilder().apply(builder)
         .build()
+}
+
+fun main() {
+    runBlocking {
+        val client = PokeApiClient {  }
+        val pikachu = client.pokemon.blocking.get("pikachu")
+    }
 }

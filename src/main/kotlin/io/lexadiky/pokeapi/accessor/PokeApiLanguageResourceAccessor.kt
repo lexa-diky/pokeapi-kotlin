@@ -1,6 +1,7 @@
 package io.lexadiky.pokeapi.accessor
 
 import io.lexadiky.pokeapi.entity.language.Language
+import io.lexadiky.pokeapi.impl.GenericAccessorImpl
 import io.lexadiky.pokeapi.impl.HttpRequester
 
 interface PokeApiLanguageResourceAccessor : GenericAccessor<Language>

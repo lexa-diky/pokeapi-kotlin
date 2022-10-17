@@ -5,7 +5,7 @@ import io.ktor.client.plugins.HttpClientPlugin
 import io.ktor.client.plugins.HttpSend
 import io.ktor.client.plugins.plugin
 import io.ktor.util.AttributeKey
-import io.lexadiky.pokeapi.PokeApiClientLogger
+import io.lexadiky.pokeapi.util.PokeApiClientLogger
 
 /**
  * Plugin performing logging into [PokeApiClientLogger]
