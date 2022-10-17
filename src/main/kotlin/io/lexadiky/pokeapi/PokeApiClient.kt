@@ -6,16 +6,21 @@ import io.lexadiky.pokeapi.accessor.PokeApiEggGroupResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiEggGroupResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.PokeApiLanguageResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiLanguageResourceAccessorImpl
+import io.lexadiky.pokeapi.accessor.PokeApiMoveDamageClassResourceAccessor
+import io.lexadiky.pokeapi.accessor.PokeApiMoveDamageClassResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.PokeApiPokemonColorResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiPokemonColorResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.PokeApiPokemonResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiPokemonResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.PokeApiPokemonSpeciesResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiPokemonSpeciesResourceAccessorImpl
+import io.lexadiky.pokeapi.accessor.PokeApiStatResourceAccessor
+import io.lexadiky.pokeapi.accessor.PokeApiStatResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.PokeApiTypeResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiTypeResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.PokeApiVersionResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiVersionResourceAccessorImpl
+import io.lexadiky.pokeapi.entity.move.MoveDamageClass
 import io.lexadiky.pokeapi.impl.HttpRequester
 import kotlinx.coroutines.runBlocking
 
@@ -67,6 +72,16 @@ interface PokeApiClient {
     val eggGroup: PokeApiEggGroupResourceAccessor
 
     /**
+     * [stats](https://pokeapi.co/docs/v2#stats) resource
+     */
+    val stat: PokeApiStatResourceAccessor
+
+    /**
+     * [move-damage-classes](https://pokeapi.co/docs/v2#move-damage-classes) resource
+     */
+    val moveDamageClass: PokeApiMoveDamageClassResourceAccessor
+
+    /**
      * Entry point for Fluid API
      */
     suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T>
@@ -88,6 +103,8 @@ internal class PokeApiClientImpl(logger: PokeApiClientLogger, host: String, path
     override val pokemonColor: PokeApiPokemonColorResourceAccessor = PokeApiPokemonColorResourceAccessorImpl(requester)
     override val pokemonSpecies: PokeApiPokemonSpeciesResourceAccessor = PokeApiPokemonSpeciesResourceAccessorImpl(requester)
     override val eggGroup: PokeApiEggGroupResourceAccessor = PokeApiEggGroupResourceAccessorImpl(requester)
+    override val stat: PokeApiStatResourceAccessor = PokeApiStatResourceAccessorImpl(requester)
+    override val moveDamageClass: PokeApiMoveDamageClassResourceAccessor = PokeApiMoveDamageClassResourceAccessorImpl(requester)
 
     override suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T> {
         return runCatching { fluidContext.computation() }
