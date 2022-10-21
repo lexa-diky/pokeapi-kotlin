@@ -22,15 +22,9 @@ import io.lexadiky.pokeapi.accessor.PokeApiTypeResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiTypeResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.PokeApiVersionResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiVersionResourceAccessorImpl
-import io.lexadiky.pokeapi.entity.common.Name
 import io.lexadiky.pokeapi.impl.HttpRequester
 import io.lexadiky.pokeapi.impl.NoOpPokeApiClientLogger
 import io.lexadiky.pokeapi.util.PokeApiClientLogger
-import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import java.io.File
 
 /**
  * Entry point for PokeApi.
