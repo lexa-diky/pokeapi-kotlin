@@ -83,6 +83,9 @@ data class PokemonSpecies(
     data class VarietySlot(
         @SerialName("is_default") val isDefault: Boolean,
         @SerialName("pokemon") val pokemon: ResourcePointer<Pokemon>
-    )
+    ): HasResourcePointer<Pokemon> {
+
+        override val pointer: ResourcePointer<Pokemon> = pokemon
+    }
 }
 
