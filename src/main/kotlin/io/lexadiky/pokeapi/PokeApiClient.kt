@@ -165,10 +165,3 @@ fun PokeApiClient(builder: (PokeApiClientBuilder.() -> Unit)? = null): PokeApiCl
     return PokeApiClientBuilder().apply(builder)
         .build()
 }
-
-fun main() {
-    runBlocking {
-        val client = PokeApiClient {  }
-        val pikachu = client.pokemon.blocking.get("pikachu")
-    }
-}
