@@ -1,5 +1,6 @@
 package io.lexadiky.pokeapi
 
+import io.ktor.client.plugins.cache.storage.*
 import io.lexadiky.pokeapi.accessor.PokeApiAbilityResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiAbilityResourceAccessorImpl
 import io.lexadiky.pokeapi.accessor.PokeApiCharacteristicResourceAccessor
@@ -24,6 +25,7 @@ import io.lexadiky.pokeapi.accessor.PokeApiVersionResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiVersionResourceAccessorImpl
 import io.lexadiky.pokeapi.impl.HttpRequester
 import io.lexadiky.pokeapi.impl.NoOpPokeApiClientLogger
+import io.lexadiky.pokeapi.util.CacheSettings
 import io.lexadiky.pokeapi.util.PokeApiClientLogger
 
 /**
@@ -99,7 +101,7 @@ interface PokeApiClient {
  */
 internal class PokeApiClientImpl(private val builder: PokeApiClientBuilder) : PokeApiClient {
 
-    private val requester: HttpRequester = HttpRequester(builder.logger, builder.host, builder.path, builder.useCache)
+    private val requester: HttpRequester = HttpRequester(builder.logger, builder.host, builder.path, builder.cache)
     private val fluidContext: PokeApiFluidContext = PokeApiFluidContextImpl(requester, this)
 
     override val pokemon: PokeApiPokemonResourceAccessor = PokeApiPokemonResourceAccessorImpl(requester)
@@ -136,7 +138,7 @@ class PokeApiClientBuilder internal constructor() {
     /**
      * If true API responses will be cached
      */
-    var useCache: Boolean = true
+    var cache: CacheSettings = CacheSettings.Disabled
 
     /**
      * [PokeApiClientLogger] implementation to log http requests made by library. No logging by default

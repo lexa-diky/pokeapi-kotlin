@@ -4,6 +4,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.cache.HttpCache
+import io.ktor.client.plugins.cache.storage.*
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -11,6 +12,7 @@ import io.ktor.http.URLProtocol
 import io.ktor.http.path
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.util.reflect.TypeInfo
+import io.lexadiky.pokeapi.util.CacheSettings
 import io.lexadiky.pokeapi.util.PokeApiClientLogger
 import kotlinx.serialization.json.Json
 
@@ -21,11 +23,13 @@ internal class HttpRequester(
     private val logger: PokeApiClientLogger,
     private val host: String,
     private val path: String,
-    private val useCache: Boolean,
+    private val cache: CacheSettings,
 ) {
     private val httpClient = HttpClient(CIO) {
-        if (useCache) {
-            install(HttpCache)
+        if (cache is CacheSettings.FileStorage) {
+            install(HttpCache) {
+                publicStorage(FileStorage(cache.directory))
+            }
         }
         install(LoggerPlugin(logger))
         install(ContentNegotiation) {
