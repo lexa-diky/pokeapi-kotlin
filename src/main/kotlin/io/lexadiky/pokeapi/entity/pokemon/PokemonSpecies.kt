@@ -30,7 +30,7 @@ data class PokemonSpecies(
     @SerialName("genera") val genera: List<Genera>,
     @SerialName("generation") val generation: ResourcePointer<Generation>,
     @SerialName("growth_rate") val growthRate: ResourcePointer<GrowthRate>,
-    @SerialName("habitat") val habitat: ResourcePointer<PokemonHabitat>,
+    @SerialName("habitat") val habitat: ResourcePointer<PokemonHabitat>?,
     @SerialName("has_gender_differences") val hasGenderDifferences: Boolean,
     @SerialName("hatch_counter") val hatchCounter: Int,
     @SerialName("is_baby") val isBaby: Boolean,
