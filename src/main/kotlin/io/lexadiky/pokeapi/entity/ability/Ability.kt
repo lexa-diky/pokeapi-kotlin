@@ -42,8 +42,8 @@ data class Ability(
 
     @Serializable
     data class EffectEntry(
-        @SerialName("effect") val flavorText: String,
-        @SerialName("short_effect") val versionGroup: String,
+        @SerialName("effect") val effect: String,
+        @SerialName("short_effect") val shortEffect: String,
         @SerialName("language") val language: ResourcePointer<Language>,
     )
 
@@ -55,7 +55,7 @@ data class Ability(
 
         @Serializable
         data class Entry(
-            @SerialName("effect") val flavorText: String,
+            @SerialName("effect") val effect: String,
             @SerialName("language") val language: ResourcePointer<Language>,
         )
     }
