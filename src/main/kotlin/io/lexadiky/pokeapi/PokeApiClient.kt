@@ -86,6 +86,11 @@ interface PokeApiClient {
     val moveTarget: MoveTargetResourceAccessor
 
     /**
+     *[move](https://pokeapi.co/docs/v2#move) resource
+     */
+    val move: PokeApiMoveResourceAccessor
+
+    /**
      * Entry point for Fluid API
      */
     suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T>
@@ -111,6 +116,7 @@ internal class PokeApiClientImpl(builder: PokeApiClientBuilder) : PokeApiClient 
     override val moveDamageClass: PokeApiMoveDamageClassResourceAccessor = PokeApiMoveDamageClassResourceAccessorImpl(requester)
     override val characteristic: PokeApiCharacteristicResourceAccessor = PokeApiCharacteristicResourceAccessorImpl(requester)
     override val moveTarget: MoveTargetResourceAccessor = MoveTargetResourceAccessorImpl(requester)
+    override val move: PokeApiMoveResourceAccessor = PokeApiMoveResourceAccessorImpl(requester)
 
     override suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T> {
         return runCatching { fluidContext.computation() }
