@@ -15,6 +15,7 @@ import io.ktor.util.reflect.TypeInfo
 import io.lexadiky.pokeapi.util.CacheSettings
 import io.lexadiky.pokeapi.util.PokeApiClientLogger
 import kotlinx.serialization.json.Json
+import kotlin.time.Duration
 
 /**
  * Helper class preforming http requests using [HttpClient] from KTOR library
@@ -24,6 +25,7 @@ internal class HttpRequester(
     private val host: String,
     private val path: String,
     private val cache: CacheSettings,
+    private val timeout: Duration
 ) {
     private val httpClient = HttpClient(CIO) {
         if (cache is CacheSettings.FileStorage) {
@@ -38,6 +40,9 @@ internal class HttpRequester(
                     ignoreUnknownKeys = true
                 }
             )
+        }
+        engine {
+            requestTimeout = timeout.inWholeMilliseconds
         }
     }
 

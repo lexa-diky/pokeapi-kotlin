@@ -17,6 +17,8 @@ import io.lexadiky.pokeapi.impl.HttpRequester
 import io.lexadiky.pokeapi.impl.NoOpPokeApiClientLogger
 import io.lexadiky.pokeapi.util.CacheSettings
 import io.lexadiky.pokeapi.util.PokeApiClientLogger
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Entry point for PokeApi.
@@ -101,7 +103,7 @@ interface PokeApiClient {
  */
 internal class PokeApiClientImpl(builder: PokeApiClientBuilder) : PokeApiClient {
 
-    private val requester: HttpRequester = HttpRequester(builder.logger, builder.host, builder.path, builder.cache)
+    private val requester: HttpRequester = HttpRequester(builder.logger, builder.host, builder.path, builder.cache, builder.timeout)
     private val fluidContext: PokeApiFluidContext = PokeApiFluidContextImpl(requester, this)
 
     override val pokemon: PokeApiPokemonResourceAccessor = PokeApiPokemonResourceAccessorImpl(requester)
@@ -146,6 +148,11 @@ class PokeApiClientBuilder internal constructor() {
      * [PokeApiClientLogger] implementation to log http requests made by library. No logging by default
      */
     var logger: PokeApiClientLogger = NoOpPokeApiClientLogger()
+
+    /**
+     * Request timeout value
+     */
+    var timeout: Duration = 10.seconds
 
     /**
      * Builds [PokeApiClient]
