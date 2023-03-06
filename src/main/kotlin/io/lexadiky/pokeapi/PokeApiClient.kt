@@ -1,27 +1,17 @@
 package io.lexadiky.pokeapi
 
 import io.ktor.client.plugins.cache.storage.*
-import io.lexadiky.pokeapi.accessor.PokeApiAbilityResourceAccessor
+import io.lexadiky.pokeapi.accessor.*
 import io.lexadiky.pokeapi.accessor.PokeApiAbilityResourceAccessorImpl
-import io.lexadiky.pokeapi.accessor.PokeApiCharacteristicResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiCharacteristicResourceAccessorImpl
-import io.lexadiky.pokeapi.accessor.PokeApiEggGroupResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiEggGroupResourceAccessorImpl
-import io.lexadiky.pokeapi.accessor.PokeApiLanguageResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiLanguageResourceAccessorImpl
-import io.lexadiky.pokeapi.accessor.PokeApiMoveDamageClassResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiMoveDamageClassResourceAccessorImpl
-import io.lexadiky.pokeapi.accessor.PokeApiPokemonColorResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiPokemonColorResourceAccessorImpl
-import io.lexadiky.pokeapi.accessor.PokeApiPokemonResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiPokemonResourceAccessorImpl
-import io.lexadiky.pokeapi.accessor.PokeApiPokemonSpeciesResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiPokemonSpeciesResourceAccessorImpl
-import io.lexadiky.pokeapi.accessor.PokeApiStatResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiStatResourceAccessorImpl
-import io.lexadiky.pokeapi.accessor.PokeApiTypeResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiTypeResourceAccessorImpl
-import io.lexadiky.pokeapi.accessor.PokeApiVersionResourceAccessor
 import io.lexadiky.pokeapi.accessor.PokeApiVersionResourceAccessorImpl
 import io.lexadiky.pokeapi.impl.HttpRequester
 import io.lexadiky.pokeapi.impl.NoOpPokeApiClientLogger
@@ -91,6 +81,11 @@ interface PokeApiClient {
     val characteristic: PokeApiCharacteristicResourceAccessor
 
     /**
+     * [move-target](https://pokeapi.co/docs/v2#move-target) resource
+     */
+    val moveTarget: MoveTargetResourceAccessor
+
+    /**
      * Entry point for Fluid API
      */
     suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T>
@@ -99,7 +94,7 @@ interface PokeApiClient {
 /**
  * Default [PokeApiClient] implementation using KTOR library
  */
-internal class PokeApiClientImpl(private val builder: PokeApiClientBuilder) : PokeApiClient {
+internal class PokeApiClientImpl(builder: PokeApiClientBuilder) : PokeApiClient {
 
     private val requester: HttpRequester = HttpRequester(builder.logger, builder.host, builder.path, builder.cache)
     private val fluidContext: PokeApiFluidContext = PokeApiFluidContextImpl(requester, this)
@@ -115,6 +110,7 @@ internal class PokeApiClientImpl(private val builder: PokeApiClientBuilder) : Po
     override val stat: PokeApiStatResourceAccessor = PokeApiStatResourceAccessorImpl(requester)
     override val moveDamageClass: PokeApiMoveDamageClassResourceAccessor = PokeApiMoveDamageClassResourceAccessorImpl(requester)
     override val characteristic: PokeApiCharacteristicResourceAccessor = PokeApiCharacteristicResourceAccessorImpl(requester)
+    override val moveTarget: MoveTargetResourceAccessor = MoveTargetResourceAccessorImpl(requester)
 
     override suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T> {
         return runCatching { fluidContext.computation() }
