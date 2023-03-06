@@ -44,6 +44,8 @@ data class PokemonSpecies(
     @SerialName("varieties") val varieties: List<VarietySlot>
 ) {
 
+    val defaultVariety: VarietySlot? get() = varieties.firstOrNull { it.isDefault }
+
     @Serializable
     data class FlavorTextEntry(
         @SerialName("flavor_text") val flavorText: String,
