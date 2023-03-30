@@ -4,7 +4,8 @@ import io.ktor.util.reflect.TypeInfo
 import io.ktor.util.reflect.typeInfo
 import io.lexadiky.pokeapi.entity.common.ResourceList
 import io.lexadiky.pokeapi.entity.common.ResourcePointer
-import io.lexadiky.pokeapi.impl.HttpRequester
+import io.lexadiky.pokeapi.impl.HttpRequesterImpl
+import io.lexadiky.pokeapi.network.HttpRequester
 
 /**
  * Marker interface for Fluid API.

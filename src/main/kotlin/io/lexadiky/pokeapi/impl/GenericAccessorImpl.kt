@@ -8,7 +8,7 @@ import io.lexadiky.pokeapi.entity.common.HasResourcePointer
 import io.lexadiky.pokeapi.entity.common.PagingPointer
 import io.lexadiky.pokeapi.entity.common.ResourceList
 import io.lexadiky.pokeapi.entity.common.ResourcePointer
-import io.lexadiky.pokeapi.impl.HttpRequester
+import io.lexadiky.pokeapi.network.HttpRequester
 
 /**
  * Default implementation of [GenericAccessor]
@@ -35,7 +35,7 @@ internal class GenericAccessorImpl<Resource>(
     }
 
     override suspend fun get(id: Int): Result<Resource> = runCatching {
-        requester.get(resourceType, resourceName, id)
+        requester.get(resourceType, resourceName, id.toString())
     }
 
     override suspend fun get(name: String): Result<Resource> = runCatching {

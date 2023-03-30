@@ -13,11 +13,11 @@ interface PokeApiClientLogger {
     /**
      * Logs outbound requests
      */
-    fun onNetworkSend(method: String, url: String)
+    fun onNetworkSend(method: String, url: String) = Unit
 
     /**
      * Logs incoming responses
      */
-    fun onNetworkReceive(method: String, statusCode: Int, url: String)
+    fun onNetworkReceive(method: String, statusCode: Int, url: String) = Unit
 }
 

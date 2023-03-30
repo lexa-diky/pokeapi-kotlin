@@ -1,11 +1,9 @@
 package io.lexadiky.pokeapi.accessor
 
-import io.ktor.util.reflect.typeInfo
 import io.lexadiky.pokeapi.entity.common.HasResourcePointer
 import io.lexadiky.pokeapi.entity.common.PagingPointer
 import io.lexadiky.pokeapi.entity.common.ResourceList
 import io.lexadiky.pokeapi.entity.common.ResourcePointer
-import io.lexadiky.pokeapi.impl.HttpRequester
 
 /**
  * Generic way to access REST resource

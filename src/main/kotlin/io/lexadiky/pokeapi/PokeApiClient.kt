@@ -1,32 +1,26 @@
 package io.lexadiky.pokeapi
 
-import io.ktor.client.plugins.cache.storage.*
-import io.lexadiky.pokeapi.accessor.PokeApiAbilityResourceAccessor
-import io.lexadiky.pokeapi.accessor.PokeApiAbilityResourceAccessorImpl
-import io.lexadiky.pokeapi.accessor.PokeApiCharacteristicResourceAccessor
-import io.lexadiky.pokeapi.accessor.PokeApiCharacteristicResourceAccessorImpl
-import io.lexadiky.pokeapi.accessor.PokeApiEggGroupResourceAccessor
-import io.lexadiky.pokeapi.accessor.PokeApiEggGroupResourceAccessorImpl
-import io.lexadiky.pokeapi.accessor.PokeApiLanguageResourceAccessor
-import io.lexadiky.pokeapi.accessor.PokeApiLanguageResourceAccessorImpl
-import io.lexadiky.pokeapi.accessor.PokeApiMoveDamageClassResourceAccessor
-import io.lexadiky.pokeapi.accessor.PokeApiMoveDamageClassResourceAccessorImpl
-import io.lexadiky.pokeapi.accessor.PokeApiPokemonColorResourceAccessor
-import io.lexadiky.pokeapi.accessor.PokeApiPokemonColorResourceAccessorImpl
-import io.lexadiky.pokeapi.accessor.PokeApiPokemonResourceAccessor
-import io.lexadiky.pokeapi.accessor.PokeApiPokemonResourceAccessorImpl
-import io.lexadiky.pokeapi.accessor.PokeApiPokemonSpeciesResourceAccessor
-import io.lexadiky.pokeapi.accessor.PokeApiPokemonSpeciesResourceAccessorImpl
-import io.lexadiky.pokeapi.accessor.PokeApiStatResourceAccessor
-import io.lexadiky.pokeapi.accessor.PokeApiStatResourceAccessorImpl
-import io.lexadiky.pokeapi.accessor.PokeApiTypeResourceAccessor
-import io.lexadiky.pokeapi.accessor.PokeApiTypeResourceAccessorImpl
-import io.lexadiky.pokeapi.accessor.PokeApiVersionResourceAccessor
-import io.lexadiky.pokeapi.accessor.PokeApiVersionResourceAccessorImpl
-import io.lexadiky.pokeapi.impl.HttpRequester
+import io.ktor.client.engine.HttpClientEngineFactory
+import io.ktor.client.engine.cio.CIO
+import io.lexadiky.pokeapi.accessor.GenericAccessor
+import io.lexadiky.pokeapi.entity.ability.Ability
+import io.lexadiky.pokeapi.entity.characteristic.Characteristic
+import io.lexadiky.pokeapi.entity.egg.EggGroup
+import io.lexadiky.pokeapi.entity.language.Language
+import io.lexadiky.pokeapi.entity.move.MoveDamageClass
+import io.lexadiky.pokeapi.entity.pokemon.Pokemon
+import io.lexadiky.pokeapi.entity.pokemon.PokemonColor
+import io.lexadiky.pokeapi.entity.pokemon.PokemonSpecies
+import io.lexadiky.pokeapi.entity.stat.Stat
+import io.lexadiky.pokeapi.entity.type.Type
+import io.lexadiky.pokeapi.entity.version.Version
+import io.lexadiky.pokeapi.impl.GenericAccessorImpl
+import io.lexadiky.pokeapi.impl.HttpRequesterImpl
 import io.lexadiky.pokeapi.impl.NoOpPokeApiClientLogger
-import io.lexadiky.pokeapi.util.CacheSettings
+import io.lexadiky.pokeapi.network.CacheSettings
+import io.lexadiky.pokeapi.network.HttpRequester
 import io.lexadiky.pokeapi.util.PokeApiClientLogger
+import kotlinx.coroutines.CancellationException
 
 /**
  * Entry point for PokeApi.
@@ -38,57 +32,57 @@ interface PokeApiClient {
     /**
      * [pokemon](https://pokeapi.co/docs/v2#pokemon) resource
      */
-    val pokemon: PokeApiPokemonResourceAccessor
+    val pokemon: GenericAccessor<Pokemon>
 
     /**
      * [type](https://pokeapi.co/docs/v2#type) resource
      */
-    val type: PokeApiTypeResourceAccessor
+    val type: GenericAccessor<Type>
 
     /**
      * [ability](https://pokeapi.co/docs/v2#ability) resource
      */
-    val ability: PokeApiAbilityResourceAccessor
+    val ability: GenericAccessor<Ability>
 
     /**
      * [version](https://pokeapi.co/docs/v2#version) resource
      */
-    val version: PokeApiVersionResourceAccessor
+    val version: GenericAccessor<Version>
 
     /**
      * [languages](https://pokeapi.co/docs/v2#languages) resource
      */
-    val language: PokeApiLanguageResourceAccessor
+    val language: GenericAccessor<Language>
 
     /**
      * [pokemon-colors](https://pokeapi.co/docs/v2#pokemon-colors) resource
      */
-    val pokemonColor: PokeApiPokemonColorResourceAccessor
+    val pokemonColor: GenericAccessor<PokemonColor>
 
     /**
      * [pokemon-species](https://pokeapi.co/docs/v2#pokemon-species) resource
      */
-    val pokemonSpecies: PokeApiPokemonSpeciesResourceAccessor
+    val pokemonSpecies: GenericAccessor<PokemonSpecies>
 
     /**
      * [egg-group](https://pokeapi.co/docs/v2#egg-group) resource
      */
-    val eggGroup: PokeApiEggGroupResourceAccessor
+    val eggGroup: GenericAccessor<EggGroup>
 
     /**
      * [stats](https://pokeapi.co/docs/v2#stats) resource
      */
-    val stat: PokeApiStatResourceAccessor
+    val stat: GenericAccessor<Stat>
 
     /**
      * [move-damage-classes](https://pokeapi.co/docs/v2#move-damage-classes) resource
      */
-    val moveDamageClass: PokeApiMoveDamageClassResourceAccessor
+    val moveDamageClass: GenericAccessor<MoveDamageClass>
 
     /**
      * [characteristics](https://pokeapi.co/docs/v2#characteristics) resource
      */
-    val characteristic: PokeApiCharacteristicResourceAccessor
+    val characteristic: GenericAccessor<Characteristic>
 
     /**
      * Entry point for Fluid API
@@ -99,25 +93,32 @@ interface PokeApiClient {
 /**
  * Default [PokeApiClient] implementation using KTOR library
  */
-internal class PokeApiClientImpl(private val builder: PokeApiClientBuilder) : PokeApiClient {
+internal class PokeApiClientImpl(
+    requester: HttpRequester,
+) : PokeApiClient {
 
-    private val requester: HttpRequester = HttpRequester(builder.logger, builder.host, builder.path, builder.cache)
     private val fluidContext: PokeApiFluidContext = PokeApiFluidContextImpl(requester, this)
 
-    override val pokemon: PokeApiPokemonResourceAccessor = PokeApiPokemonResourceAccessorImpl(requester)
-    override val type: PokeApiTypeResourceAccessor = PokeApiTypeResourceAccessorImpl(requester)
-    override val ability: PokeApiAbilityResourceAccessor = PokeApiAbilityResourceAccessorImpl(requester)
-    override val version: PokeApiVersionResourceAccessor = PokeApiVersionResourceAccessorImpl(requester)
-    override val language: PokeApiLanguageResourceAccessor = PokeApiLanguageResourceAccessorImpl(requester)
-    override val pokemonColor: PokeApiPokemonColorResourceAccessor = PokeApiPokemonColorResourceAccessorImpl(requester)
-    override val pokemonSpecies: PokeApiPokemonSpeciesResourceAccessor = PokeApiPokemonSpeciesResourceAccessorImpl(requester)
-    override val eggGroup: PokeApiEggGroupResourceAccessor = PokeApiEggGroupResourceAccessorImpl(requester)
-    override val stat: PokeApiStatResourceAccessor = PokeApiStatResourceAccessorImpl(requester)
-    override val moveDamageClass: PokeApiMoveDamageClassResourceAccessor = PokeApiMoveDamageClassResourceAccessorImpl(requester)
-    override val characteristic: PokeApiCharacteristicResourceAccessor = PokeApiCharacteristicResourceAccessorImpl(requester)
+    override val pokemon: GenericAccessor<Pokemon> = GenericAccessorImpl("pokemon", requester)
+    override val type: GenericAccessor<Type> = GenericAccessorImpl("type", requester)
+    override val ability: GenericAccessor<Ability> = GenericAccessorImpl("ability", requester)
+    override val version: GenericAccessor<Version> = GenericAccessorImpl("version", requester)
+    override val language: GenericAccessor<Language> = GenericAccessorImpl("language", requester)
+    override val pokemonColor: GenericAccessor<PokemonColor> = GenericAccessorImpl("pokemon-color", requester)
+    override val pokemonSpecies: GenericAccessor<PokemonSpecies> = GenericAccessorImpl("pokemon-species", requester)
+    override val eggGroup: GenericAccessor<EggGroup> = GenericAccessorImpl("egg-group", requester)
+    override val stat: GenericAccessor<Stat> = GenericAccessorImpl("stat", requester)
+    override val moveDamageClass: GenericAccessor<MoveDamageClass> = GenericAccessorImpl("move-damage-class", requester)
+    override val characteristic: GenericAccessor<Characteristic> =GenericAccessorImpl("characteristic", requester)
 
     override suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T> {
-        return runCatching { fluidContext.computation() }
+        return try {
+            Result.success(fluidContext.computation())
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            Result.failure(e)
+        }
     }
 }
 
@@ -145,10 +146,21 @@ class PokeApiClientBuilder internal constructor() {
      */
     var logger: PokeApiClientLogger = NoOpPokeApiClientLogger()
 
+    var engine: HttpClientEngineFactory<*> = CIO
+
     /**
      * Builds [PokeApiClient]
      */
-    internal fun build(): PokeApiClient = PokeApiClientImpl(this)
+    internal fun build(): PokeApiClient {
+        val requester = HttpRequesterImpl(
+            logger = logger,
+            host = host,
+            path = path,
+            cache = cache,
+            engine = engine
+        )
+        return PokeApiClientImpl(requester)
+    }
 }
 
 /**
@@ -165,4 +177,13 @@ fun PokeApiClient(builder: (PokeApiClientBuilder.() -> Unit)? = null): PokeApiCl
     }
     return PokeApiClientBuilder().apply(builder)
         .build()
+}
+
+/**
+ * Creates [PokeApiClient] with custom [HttpRequester] implementation.
+ *
+ * Use when you need to customize requests beyond what builder [PokeApiClient] function provides.
+ */
+fun PokeApiClient(requester: HttpRequester): PokeApiClient {
+    return PokeApiClientImpl(requester)
 }
