@@ -17,7 +17,7 @@ import kotlinx.serialization.Serializable
 data class PokemonSpecies(
     @SerialName("id") val id: Int,
     @SerialName("name") val name: String,
-    @SerialName("base_happiness") val baseHappiness: Int,
+    @SerialName("base_happiness") val baseHappiness: Int?,
     @SerialName("capture_rate") val captureRate: Int,
     @SerialName("color") val color: ResourcePointer<PokemonColor>,
     @SerialName("egg_groups") val eggGroups: List<ResourcePointer<EggGroup>>,
@@ -30,9 +30,9 @@ data class PokemonSpecies(
     @SerialName("genera") val genera: List<Genera>,
     @SerialName("generation") val generation: ResourcePointer<Generation>,
     @SerialName("growth_rate") val growthRate: ResourcePointer<GrowthRate>,
-    @SerialName("habitat") val habitat: ResourcePointer<PokemonHabitat>,
+    @SerialName("habitat") val habitat: ResourcePointer<PokemonHabitat>?,
     @SerialName("has_gender_differences") val hasGenderDifferences: Boolean,
-    @SerialName("hatch_counter") val hatchCounter: Int,
+    @SerialName("hatch_counter") val hatchCounter: Int?,
     @SerialName("is_baby") val isBaby: Boolean,
     @SerialName("is_legendary") val isLegendary: Boolean,
     @SerialName("is_mythical") val isMythical: Boolean,
@@ -40,9 +40,11 @@ data class PokemonSpecies(
     @SerialName("order") val order: Int,
     @SerialName("pal_park_encounters") val palParkEncounters: List<PalParkEncounter>,
     @SerialName("pokedex_numbers") val pokedexNumbers: List<PokedexNumber>,
-    @SerialName("shape") val shape: ResourcePointer<Shape>,
+    @SerialName("shape") val shape: ResourcePointer<Shape>?,
     @SerialName("varieties") val varieties: List<VarietySlot>
 ) {
+
+    val defaultVariety: VarietySlot? get() = varieties.firstOrNull { it.isDefault }
 
     @Serializable
     data class FlavorTextEntry(

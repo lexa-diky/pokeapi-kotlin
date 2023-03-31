@@ -21,7 +21,7 @@ data class Pokemon(
     @SerialName("name") val name: String,
     @SerialName("types") val types: List<TypeSlot>,
     @SerialName("past_types") val pastTypes: List<PastTypeSlot>,
-    @SerialName("base_experience") val baseExperience: Int,
+    @SerialName("base_experience") val baseExperience: Int?,
     @SerialName("height") val height: Int,
     @SerialName("is_default") val isDefault: Boolean,
     @SerialName("order") val order: Int,
