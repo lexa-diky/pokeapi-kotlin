@@ -52,6 +52,10 @@ internal class GenericAccessorImpl<Resource>(
         return PagesImpl(size)
     }
 
+    override fun toString(): String {
+        return "GenericAccessor(resource=$resourceName)"
+    }
+
     @Suppress("RemoveExplicitTypeArguments")
     inner class PagesImpl(private val size: Int) : GenericAccessor.Pages<Resource> {
 

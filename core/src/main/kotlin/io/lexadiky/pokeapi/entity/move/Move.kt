@@ -12,10 +12,10 @@ data class Move(
     @SerialName("id") val id: Int,
     @SerialName("target") val target: ResourcePointer<MoveTarget>,
     @SerialName("type") val type: ResourcePointer<Type>,
-    @SerialName("accuracy") val accuracy: Int,
+    @SerialName("accuracy") val accuracy: Int?,
     @SerialName("damage_class") val damageClass: ResourcePointer<MoveDamageClass>,
     @SerialName("names") val names: List<Name>,
-    @SerialName("power") val power: Int,
-    @SerialName("pp") val pp: Int,
+    @SerialName("power") val power: Int?,
+    @SerialName("pp") val pp: Int?,
     @SerialName("priority") val priority: Int
 )
