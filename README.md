@@ -4,7 +4,6 @@
 [![](https://jitpack.io/v/lexa-diky/pokeapi-kotlin.svg)](https://jitpack.io/#lexa-diky/pokeapi-kotlin)
 [![](https://img.shields.io/badge/API%20Reference-Dokka-blue)](https://lexa-diky.github.io/pokeapi-kotlin/)
 
-
 Kotlin client for https://pokeapi.co powered by coroutines.
 
 ## Features
@@ -13,10 +12,10 @@ Kotlin client for https://pokeapi.co powered by coroutines.
 2. Caching out of the box
 3. Powered by coroutines
 4. No exceptions, everything wrapped into Result<T> out of the box
-4. Both 1-1 with original API layer and enhanced 'fluid' version
-5. No transitive dependencies
-6. Ability to customize underlying HTTP engine (WIP)
-7. Ability to use custom PokeApi deployment
+5. Both 1-1 with original API layer and enhanced 'fluid' version
+6. No transitive dependencies
+7. Ability to customize underlying HTTP engine (WIP)
+8. Ability to use custom PokeApi deployment
 
 ## Get Started
 

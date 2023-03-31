@@ -14,9 +14,9 @@ import io.lexadiky.pokeapi.entity.pokemon.PokemonColor
 import io.lexadiky.pokeapi.entity.pokemon.PokemonSpecies
 import io.lexadiky.pokeapi.entity.stat.Stat
 import io.lexadiky.pokeapi.entity.type.Type
-import io.lexadiky.pokeapi.impl.GenericAccessorImpl
 import io.lexadiky.pokeapi.impl.HttpRequesterImpl
 import io.lexadiky.pokeapi.impl.NoOpPokeApiClientLogger
+import io.lexadiky.pokeapi.impl.PokeApiClientImpl
 import io.lexadiky.pokeapi.network.CacheSettings
 import io.lexadiky.pokeapi.network.HttpRequester
 import io.lexadiky.pokeapi.util.PokeApiClientLogger
@@ -102,33 +102,6 @@ interface PokeApiClient {
 }
 
 /**
- * Default [PokeApiClient] implementation using KTOR library
- */
-internal class PokeApiClientImpl(builder: PokeApiClientBuilder) : PokeApiClient {
-
-    private val requester: HttpRequester = HttpRequesterImpl(builder.logger, builder.host, builder.path, builder.cache, builder.timeout)
-    private val fluidContext: PokeApiFluidContext = PokeApiFluidContextImpl(requester, this)
-
-    override val pokemon: GenericAccessor<Pokemon> = GenericAccessorImpl("pokemon", requester)
-    override val type: GenericAccessor<Type> = GenericAccessorImpl("type", requester)
-    override val ability: GenericAccessor<Ability> = GenericAccessorImpl("ability", requester)
-    override val version: GenericAccessor<Version> = GenericAccessorImpl("version", requester)
-    override val language: GenericAccessor<Language> = GenericAccessorImpl("language", requester)
-    override val pokemonColor: GenericAccessor<PokemonColor> = GenericAccessorImpl("pokemon-color", requester)
-    override val pokemonSpecies: GenericAccessor<PokemonSpecies> = GenericAccessorImpl("pokemon-species", requester)
-    override val eggGroup: GenericAccessor<EggGroup> = GenericAccessorImpl("egg-group", requester)
-    override val stat: GenericAccessor<Stat> = GenericAccessorImpl("stat", requester)
-    override val moveDamageClass: GenericAccessor<MoveDamageClass> = GenericAccessorImpl("move-damage-class", requester)
-    override val characteristic: GenericAccessor<Characteristic> =GenericAccessorImpl("characteristic", requester)
-    override val moveTarget: GenericAccessor<MoveTarget> = GenericAccessorImpl("move-target", requester)
-    override val move: GenericAccessor<Move> = GenericAccessorImpl("move", requester)
-
-    override suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T> {
-        return runCatching { fluidContext.computation() }
-    }
-}
-
-/**
  * Builder for [PokeApiClient]
  */
 class PokeApiClientBuilder internal constructor() {
@@ -160,7 +133,9 @@ class PokeApiClientBuilder internal constructor() {
     /**
      * Builds [PokeApiClient]
      */
-    internal fun build(): PokeApiClient = PokeApiClientImpl(this)
+    internal fun build(): PokeApiClient = PokeApiClientImpl(
+        HttpRequesterImpl(logger, host, path, cache, timeout)
+    )
 }
 
 /**
@@ -177,4 +152,11 @@ fun PokeApiClient(builder: (PokeApiClientBuilder.() -> Unit)? = null): PokeApiCl
     }
     return PokeApiClientBuilder().apply(builder)
         .build()
+}
+
+/**
+ * Allows to create [PokeApiClient] using fully custom [HttpRequester].
+ */
+fun PokeApiClient(requester: HttpRequester): PokeApiClient {
+    return PokeApiClientImpl(requester)
 }

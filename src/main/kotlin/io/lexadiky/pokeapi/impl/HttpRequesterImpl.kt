@@ -79,7 +79,7 @@ internal class HttpRequesterImpl(
             url {
                 host = this@HttpRequesterImpl.host
                 protocol = URLProtocol.HTTPS
-                path(path, resource, pointer.toString())
+                path(path, resource, pointer)
             }
         }.body(type)
     }
