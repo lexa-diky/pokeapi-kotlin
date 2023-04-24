@@ -1,6 +1,8 @@
 package io.lexadiky.pokeapi.impl
 
+import io.ktor.http.content.Version
 import io.lexadiky.pokeapi.PokeApiClient
+import io.lexadiky.pokeapi.PokeApiClientBuilder
 import io.lexadiky.pokeapi.PokeApiFluidContext
 import io.lexadiky.pokeapi.PokeApiFluidContextImpl
 import io.lexadiky.pokeapi.accessor.GenericAccessor
@@ -16,7 +18,6 @@ import io.lexadiky.pokeapi.entity.pokemon.PokemonColor
 import io.lexadiky.pokeapi.entity.pokemon.PokemonSpecies
 import io.lexadiky.pokeapi.entity.stat.Stat
 import io.lexadiky.pokeapi.entity.type.Type
-import io.lexadiky.pokeapi.entity.version.Version
 import io.lexadiky.pokeapi.network.HttpRequester
 
 /**
