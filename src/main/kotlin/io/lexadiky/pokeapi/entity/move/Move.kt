@@ -3,7 +3,6 @@ package io.lexadiky.pokeapi.entity.move
 import io.lexadiky.pokeapi.entity.common.Name
 import io.lexadiky.pokeapi.entity.common.ResourcePointer
 import io.lexadiky.pokeapi.entity.language.Language
-import io.lexadiky.pokeapi.entity.pokemon.PokemonSpecies
 import io.lexadiky.pokeapi.entity.type.Type
 import io.lexadiky.pokeapi.entity.version.VersionGroup
 import kotlinx.serialization.SerialName

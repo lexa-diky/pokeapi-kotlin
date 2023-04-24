@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.DynamicContainer
 import org.junit.jupiter.api.DynamicContainer.dynamicContainer
-import org.junit.jupiter.api.DynamicTest.*
+import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
@@ -65,7 +65,7 @@ class IntegrationGrandTest {
         val clientKClass = client::class
         return clientKClass.declaredMemberProperties
             .filter { it.returnType.isSubtypeOf(typeOf<GenericAccessor<*>>()) }
-            .mapNotNull { it as? KProperty1<PokeApiClient, GenericAccessor<Any>> }
+            .filterIsInstance<KProperty1<PokeApiClient, GenericAccessor<Any>>>()
             .map { it.get(client) }
             .stream()
     }

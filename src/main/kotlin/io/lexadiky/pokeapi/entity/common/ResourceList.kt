@@ -27,6 +27,7 @@ data class ResourceList<Resource>(
  * Pointer to another page. Keeps type safety when requesting next page
  */
 @JvmInline
+@Suppress("unused")
 value class PagingPointer<Resource>(val url: String)
 
 /**

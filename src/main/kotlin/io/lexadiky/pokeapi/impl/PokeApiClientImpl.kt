@@ -2,7 +2,6 @@ package io.lexadiky.pokeapi.impl
 
 import io.ktor.http.content.Version
 import io.lexadiky.pokeapi.PokeApiClient
-import io.lexadiky.pokeapi.PokeApiClientBuilder
 import io.lexadiky.pokeapi.PokeApiFluidContext
 import io.lexadiky.pokeapi.PokeApiFluidContextImpl
 import io.lexadiky.pokeapi.accessor.GenericAccessor
