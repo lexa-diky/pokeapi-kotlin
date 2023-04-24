@@ -20,6 +20,7 @@ internal class GenericAccessorImpl<Resource>(
     private val requester: HttpRequester,
 ) : GenericAccessor<Resource> {
 
+    override val name: String = resourceName
     override val blocking: GenericBlockingAccessor<Resource> = GenericBlockingAccessorImpl(this)
 
     override suspend fun all(): Result<ResourceList<Resource>> = runCatching {

@@ -10,6 +10,15 @@ import io.lexadiky.pokeapi.entity.common.ResourcePointer
  */
 interface GenericAccessor<Resource> {
 
+    /**
+     * Name of resource this accessor belongs.
+     * Corresponds to [Resource]
+     */
+    val name: String
+
+    /**
+     * Gives access to blocking version of accessor methods
+     */
     val blocking: GenericBlockingAccessor<Resource>
 
     /**

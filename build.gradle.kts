@@ -22,6 +22,7 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    testImplementation("org.jetbrains.kotlin:kotlin-reflect:1.7.20")
     testImplementation(kotlin("test"))
 }
 
