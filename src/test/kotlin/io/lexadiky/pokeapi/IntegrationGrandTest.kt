@@ -20,7 +20,6 @@ import kotlin.time.Duration.Companion.seconds
 class IntegrationGrandTest {
 
     @TestFactory
-    @Disabled
     fun runSpecific(): Stream<DynamicContainer> {
         val client = PokeApiClient {
             timeout = 10.seconds // if we throttle, do nothing
