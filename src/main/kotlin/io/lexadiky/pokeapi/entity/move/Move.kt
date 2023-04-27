@@ -1,5 +1,6 @@
 package io.lexadiky.pokeapi.entity.move
 
+import io.lexadiky.pokeapi.entity.ability.Ability
 import io.lexadiky.pokeapi.entity.common.Name
 import io.lexadiky.pokeapi.entity.common.ResourcePointer
 import io.lexadiky.pokeapi.entity.language.Language
@@ -21,6 +22,7 @@ data class Move(
     @SerialName("pp") val pp: Int?,
     @SerialName("priority") val priority: Int,
     @SerialName("flavor_text_entries") val flavorTextEntries: List<FlavorTextEntry>,
+    @SerialName("effect_entries") val effectEntries: List<Ability.EffectEntry>,
 ) {
 
     @Serializable
@@ -28,5 +30,12 @@ data class Move(
         @SerialName("flavor_text") val flavorText: String,
         @SerialName("language") val language: ResourcePointer<Language>,
         @SerialName("version_group") val versionGroup: ResourcePointer<VersionGroup>,
+    )
+
+    @Serializable
+    data class EffectEntry(
+        @SerialName("effect") val effect: String,
+        @SerialName("short_effect") val shortEffect: String,
+        @SerialName("language") val language: ResourcePointer<Language>,
     )
 }
