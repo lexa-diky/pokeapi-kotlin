@@ -21,6 +21,7 @@ data class Move(
     @SerialName("power") val power: Int?,
     @SerialName("pp") val pp: Int?,
     @SerialName("priority") val priority: Int,
+    @SerialName("effect_chance") val effectChance: Int?,
     @SerialName("flavor_text_entries") val flavorTextEntries: List<FlavorTextEntry>,
     @SerialName("effect_entries") val effectEntries: List<Ability.EffectEntry>,
 ) {
