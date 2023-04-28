@@ -21,11 +21,18 @@ internal class LoggerPlugin(private val logger: PokeApiClientLogger) : HttpClien
     override fun install(plugin: LoggerPlugin, scope: HttpClient) {
         scope.plugin(HttpSend).intercept { request ->
             if (logger.isEnabled) {
-                logger.onNetworkSend(request.method.value, request.url.buildString())
+                logger.onNetworkSend(
+                    method = request.method.value,
+                    url = request.url.buildString()
+                )
             }
             val originalCall = execute(request)
             if (logger.isEnabled) {
-                logger.onNetworkReceive(originalCall.request.method.value, originalCall.response.status.value, originalCall.request.url.toString())
+                logger.onNetworkReceive(
+                    method = originalCall.request.method.value,
+                    statusCode = originalCall.response.status.value,
+                    url = originalCall.request.url.toString()
+                )
             }
             originalCall
         }

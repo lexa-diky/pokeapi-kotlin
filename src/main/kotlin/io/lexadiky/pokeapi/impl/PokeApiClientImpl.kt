@@ -7,6 +7,8 @@ import io.lexadiky.pokeapi.accessor.GenericAccessor
 import io.lexadiky.pokeapi.entity.ability.Ability
 import io.lexadiky.pokeapi.entity.characteristic.Characteristic
 import io.lexadiky.pokeapi.entity.egg.EggGroup
+import io.lexadiky.pokeapi.entity.evolution.EvolutionChain
+import io.lexadiky.pokeapi.entity.evolution.EvolutionTrigger
 import io.lexadiky.pokeapi.entity.language.Language
 import io.lexadiky.pokeapi.entity.move.Move
 import io.lexadiky.pokeapi.entity.move.MoveDamageClass
@@ -38,6 +40,8 @@ internal class PokeApiClientImpl(requester: HttpRequester) : PokeApiClient {
     override val characteristic: GenericAccessor<Characteristic> = GenericAccessorImpl("characteristic", requester)
     override val moveTarget: GenericAccessor<MoveTarget> = GenericAccessorImpl("move-target", requester)
     override val move: GenericAccessor<Move> = GenericAccessorImpl("move", requester)
+    override val evolutionChain: GenericAccessor<EvolutionChain> = GenericAccessorImpl("evolution-chain", requester)
+    override val evolutionTrigger: GenericAccessor<EvolutionTrigger> = GenericAccessorImpl("evolution-trigger", requester)
 
     override suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T> {
         return runCatching { fluidContext.computation() }

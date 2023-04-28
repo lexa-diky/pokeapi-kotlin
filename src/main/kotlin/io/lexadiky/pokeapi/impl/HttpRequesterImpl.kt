@@ -25,27 +25,11 @@ internal class HttpRequesterImpl(
     private val logger: PokeApiClientLogger,
     private val host: String,
     private val path: String,
-    private val cache: CacheSettings,
-    private val timeout: Duration
-) : HttpRequester {
-    private val httpClient = HttpClient(CIO) {
-        if (cache is CacheSettings.FileStorage) {
-            install(HttpCache) {
-                publicStorage(FileStorage(cache.directory))
-            }
-        }
-        install(LoggerPlugin(logger))
-        install(ContentNegotiation) {
-            json(
-                Json {
-                    ignoreUnknownKeys = true
-                }
-            )
-        }
-        engine {
-            requestTimeout = timeout.inWholeMilliseconds
-        }
-    }
+    private val timeout: Duration,
+    cache: CacheSettings,
+    ) : HttpRequester {
+
+    private val httpClient = createClient(cache)
 
     /**
      * Retrieves resource list
@@ -92,6 +76,27 @@ internal class HttpRequesterImpl(
      */
     override suspend fun <T> get(type: TypeInfo, url: String): T {
         return httpClient.get(url).body(type)
+    }
+
+    private fun createClient(cache: CacheSettings): HttpClient {
+        return HttpClient(CIO) {
+            if (cache is CacheSettings.FileStorage) {
+                install(HttpCache) {
+                    publicStorage(FileStorage(cache.directory))
+                }
+            }
+            install(LoggerPlugin(logger))
+            install(ContentNegotiation) {
+                json(
+                    Json {
+                        ignoreUnknownKeys = true
+                    }
+                )
+            }
+            engine {
+                requestTimeout = timeout.inWholeMilliseconds
+            }
+        }
     }
 
     companion object {

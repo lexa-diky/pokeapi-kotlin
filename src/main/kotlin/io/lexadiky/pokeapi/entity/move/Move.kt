@@ -4,6 +4,7 @@ import io.lexadiky.pokeapi.entity.ability.Ability
 import io.lexadiky.pokeapi.entity.common.Name
 import io.lexadiky.pokeapi.entity.common.ResourcePointer
 import io.lexadiky.pokeapi.entity.language.Language
+import io.lexadiky.pokeapi.entity.pokemon.Pokemon
 import io.lexadiky.pokeapi.entity.type.Type
 import io.lexadiky.pokeapi.entity.version.VersionGroup
 import kotlinx.serialization.SerialName
@@ -24,6 +25,7 @@ data class Move(
     @SerialName("effect_chance") val effectChance: Int?,
     @SerialName("flavor_text_entries") val flavorTextEntries: List<FlavorTextEntry>,
     @SerialName("effect_entries") val effectEntries: List<Ability.EffectEntry>,
+    @SerialName("learned_by_pokemon") val learnedByPokemon: List<ResourcePointer<Pokemon>>
 ) {
 
     @Serializable

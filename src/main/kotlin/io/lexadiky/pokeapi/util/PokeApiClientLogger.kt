@@ -20,4 +20,3 @@ interface PokeApiClientLogger {
      */
     fun onNetworkReceive(method: String, statusCode: Int, url: String) = Unit
 }
-

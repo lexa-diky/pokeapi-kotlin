@@ -4,6 +4,9 @@ import io.lexadiky.pokeapi.accessor.GenericAccessor
 import io.lexadiky.pokeapi.entity.ability.Ability
 import io.lexadiky.pokeapi.entity.characteristic.Characteristic
 import io.lexadiky.pokeapi.entity.egg.EggGroup
+import io.lexadiky.pokeapi.entity.evolution.EvolutionChain
+import io.lexadiky.pokeapi.entity.evolution.EvolutionTrigger
+import io.lexadiky.pokeapi.entity.item.Item
 import io.lexadiky.pokeapi.entity.language.Language
 import io.lexadiky.pokeapi.entity.move.Move
 import io.lexadiky.pokeapi.entity.move.MoveDamageClass
@@ -96,6 +99,21 @@ interface PokeApiClient {
     val move: GenericAccessor<Move>
 
     /**
+     *[evolution-chain](https://pokeapi.co/docs/v2#evolution-chains) resource
+     */
+    val evolutionChain: GenericAccessor<EvolutionChain>
+
+    /**
+     *[evolution-triggers](https://pokeapi.co/docs/v2#evolution-triggers) resource
+     */
+    val evolutionTrigger: GenericAccessor<EvolutionTrigger>
+
+    /**
+     *[item](https://pokeapi.co/docs/v2#item) resource
+     */
+    val item: GenericAccessor<Item>
+
+    /**
      * Entry point for Fluid API
      */
     suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T>
@@ -134,7 +152,7 @@ class PokeApiClientBuilder internal constructor() {
      * Builds [PokeApiClient]
      */
     internal fun build(): PokeApiClient = PokeApiClientImpl(
-        HttpRequesterImpl(logger, host, path, cache, timeout)
+        HttpRequesterImpl(logger, host, path, timeout, cache)
     )
 }
 
