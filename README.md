@@ -103,21 +103,6 @@ val client = PokeApiClient { }
 val pikachu = client.pokemon.blocking.get("pikachu")
 ```
 
-### Fluid
-
-Fluid API uses mostly the same methods as normal one, but all `ResourcePointer<T>` objects now have
-`get` method returning pointed object
-
-```kotlin
-val client = PokeApiClient { }
-val allPokemonWithFireType = client.use {
-    pokemon.all().get().filter { pkmn ->
-        pkmn.get().types.map { it.type.get() }
-            .any { it.name == "fire" }
-    }
-}
-```
-
 ## Progress
 
 ✅ Basic API access via `get` and `all`

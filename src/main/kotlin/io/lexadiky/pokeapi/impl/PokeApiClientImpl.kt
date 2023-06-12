@@ -1,8 +1,6 @@
 package io.lexadiky.pokeapi.impl
 
 import io.lexadiky.pokeapi.PokeApiClient
-import io.lexadiky.pokeapi.PokeApiFluidContext
-import io.lexadiky.pokeapi.PokeApiFluidContextImpl
 import io.lexadiky.pokeapi.accessor.GenericAccessor
 import io.lexadiky.pokeapi.entity.ability.Ability
 import io.lexadiky.pokeapi.entity.characteristic.Characteristic
@@ -26,8 +24,6 @@ import io.lexadiky.pokeapi.network.HttpRequester
  * Default [PokeApiClient] implementation using KTOR library
  */
 internal class PokeApiClientImpl(requester: HttpRequester) : PokeApiClient {
-    private val fluidContext: PokeApiFluidContext = PokeApiFluidContextImpl(requester, this)
-
     override val pokemon: GenericAccessor<Pokemon> = GenericAccessorImpl("pokemon", requester)
     override val type: GenericAccessor<Type> = GenericAccessorImpl("type", requester)
     override val ability: GenericAccessor<Ability> = GenericAccessorImpl("ability", requester)
@@ -44,8 +40,4 @@ internal class PokeApiClientImpl(requester: HttpRequester) : PokeApiClient {
     override val evolutionChain: GenericAccessor<EvolutionChain> = GenericAccessorImpl("evolution-chain", requester)
     override val evolutionTrigger: GenericAccessor<EvolutionTrigger> = GenericAccessorImpl("evolution-trigger", requester)
     override val item: GenericAccessor<Item> = GenericAccessorImpl("item", requester)
-
-    override suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T> {
-        return runCatching { fluidContext.computation() }
-    }
 }

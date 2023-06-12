@@ -29,7 +29,7 @@ import kotlin.time.Duration.Companion.seconds
 /**
  * Entry point for PokeApi.
  *
- * Use either properties like [pokemon] to access normal REST style requests or [use] for Fluid API
+ * Use either properties like [pokemon] to access normal REST style requests
  */
 interface PokeApiClient {
 
@@ -112,11 +112,6 @@ interface PokeApiClient {
      *[item](https://pokeapi.co/docs/v2#item) resource
      */
     val item: GenericAccessor<Item>
-
-    /**
-     * Entry point for Fluid API
-     */
-    suspend fun <T> use(computation: suspend PokeApiFluidContext.() -> T): Result<T>
 }
 
 /**
