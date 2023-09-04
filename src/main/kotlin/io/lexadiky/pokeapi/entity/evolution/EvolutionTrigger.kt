@@ -11,5 +11,5 @@ data class EvolutionTrigger(
     @SerialName("id") val id: Int,
     @SerialName("name") val name: String,
     @SerialName("names") val names: List<Name>,
-    @SerialName("pokemon_species") val pokemonSpecies: ResourcePointer<PokemonSpecies>
+    @SerialName("pokemon_species") val pokemonSpecies: List<ResourcePointer<PokemonSpecies>>
 )

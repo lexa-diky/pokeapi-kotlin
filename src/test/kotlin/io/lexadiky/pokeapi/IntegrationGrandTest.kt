@@ -21,15 +21,17 @@ class IntegrationGrandTest {
 
     @TestFactory
     fun runSpecific(): Stream<DynamicContainer> {
+        val endpoint = "move"
+
         val client = PokeApiClient {
             timeout = 10.seconds // if we throttle, do nothing
             cache = CacheSettings.Disabled // do not cache
         }
 
 
-        return extractAccessors(client)
-            .filter { it.name == "move" }
-            .map(::test)
+        return extractAccessors(client).stream()
+            .filter { it.name == endpoint }
+            .map { test(it, 1, 1) }
     }
 
     @TestFactory
@@ -41,31 +43,32 @@ class IntegrationGrandTest {
             cache = CacheSettings.Disabled // do not cache
         }
 
+        val accessors = extractAccessors(client)
 
-        return extractAccessors(client)
-            .map(::test)
+        return accessors.withIndex().toList().stream()
+            .map { (idx, accessor) -> test(accessor, accessors.size, idx) }
     }
 
-    private fun test(accessor: GenericAccessor<Any>): DynamicContainer {
+    private fun test(accessor: GenericAccessor<Any>, totalSize: Int, idx: Int): DynamicContainer {
         val blocking = accessor.blocking
-        val all = blocking.all().getOrThrow().stream()
+        val allElements = blocking.all().getOrThrow()
+        val allIndexed = allElements.withIndex().toList().stream()
 
         return dynamicContainer(
-            "get all data from ${accessor.name}",
-            all.map { pointer ->
-                dynamicTest("get $pointer") {
+            "get all data from ${accessor.name} [${idx + 1}/$totalSize]",
+            allIndexed.map { (idx, pointer) ->
+                dynamicTest("get $pointer [${idx + 1}/${allElements.size}]") {
                     blocking.get(pointer).getOrThrow()
                 }
             }
         )
     }
 
-    private fun extractAccessors(client: PokeApiClient): Stream<GenericAccessor<Any>> {
+    private fun extractAccessors(client: PokeApiClient): List<GenericAccessor<Any>> {
         val clientKClass = client::class
         return clientKClass.declaredMemberProperties
             .filter { it.returnType.isSubtypeOf(typeOf<GenericAccessor<*>>()) }
             .filterIsInstance<KProperty1<PokeApiClient, GenericAccessor<Any>>>()
             .map { it.get(client) }
-            .stream()
     }
 }
